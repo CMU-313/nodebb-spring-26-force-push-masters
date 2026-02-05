@@ -122,7 +122,8 @@ module.exports = function (Topics) {
 	async function toggleResolve(tid, uid, resolve) {
 		// Fetch topic fields for permission checks
 		const topicData = await Topics.getTopicFields(tid, ['tid', 'uid', 'cid']);
-		if (!topicData || !topicData.cid) {throw new Error('[[error:no-topic]]');
+		if (!topicData || !topicData.cid) {
+			throw new Error('[[error:no-topic]]');
 		}
 
 		// Check whether caller is an admin/mod for this topic's category
@@ -131,11 +132,11 @@ module.exports = function (Topics) {
 		// permission rules (open to later change based on needs): 
 		// only admin can resolve topics admin or topic author can unresolve
 		if (resolve) {
-		if (!isAdminOrMod) {
-			throw new Error('[[error:no-privileges]]');
-		}
+			if (!isAdminOrMod) {
+				throw new Error('[[error:no-privileges]]');
+			}
 		} else if (!isAdminOrMod && uid !== topicData.uid) {
-		throw new Error('[[error:no-privileges]]');
+			throw new Error('[[error:no-privileges]]');
 		}
 		// Persist resolved state in DB
 		await Topics.setTopicField(tid, 'resolved', resolve ? 1 : 0);
