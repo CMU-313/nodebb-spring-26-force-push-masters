@@ -10,6 +10,7 @@ const categories = require('../categories');
 const meta = require('../meta');
 const activitypub = require('../activitypub');
 const utils = require('../utils');
+const roles = require('./roles');
 
 const User = module.exports;
 
@@ -289,6 +290,29 @@ User.addInterstitials = function (callback) {
 			User.interstitials.gdpr, // GDPR information collection/processing consent + email consent
 			User.interstitials.tou, // Forum Terms of Use
 		],
+	});
+
+	callback();
+};
+
+User.addRegistrationHooks = function (callback) {
+	plugins.hooks.register('core', {
+		hook: 'filter:user.addToApprovalQueue',
+		method: async ({ data, userData }) => {
+			if (userData && userData.role) {
+				data.role = roles.normalizeRole(userData.role);
+			}
+			return { data, userData };
+		},
+	});
+
+	plugins.hooks.register('core', {
+		hook: 'action:user.create',
+		method: async ({ user, data }) => {
+			const role = data && data.role ? roles.normalizeRole(data.role) : roles.ROLE_DEFAULT;
+			await roles.assignRoleToUser(user.uid, role);
+			await User.setUserField(user.uid, 'role', role);
+		},
 	});
 
 	callback();

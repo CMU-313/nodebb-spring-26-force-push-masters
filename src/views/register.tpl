@@ -40,6 +40,18 @@
 							</div>
 						</div>
 
+						<div class="mb-2 d-flex flex-column gap-2">
+							<label for="role">Role</label>
+							<div>
+								<select class="form-select" name="role" id="role">
+									<option value="student" selected>Student</option>
+									<option value="ta">TA</option>
+									<option value="professor">Professor</option>
+								</select>
+								<span class="form-text text-xs">TAs and Professors require admin approval.</span>
+							</div>
+						</div>
+
 						{{{ each regFormEntry }}}
 						<div class="mb-2 regFormEntry d-flex flex-column gap-2 {./styleName}">
 							<label for="{./inputId}">{./label}</label>

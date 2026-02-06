@@ -17,6 +17,7 @@ const slugify = require('../slugify');
 const helpers = require('./helpers');
 const privileges = require('../privileges');
 const sockets = require('../socket.io');
+const roles = require('../user/roles');
 
 const authenticationController = module.exports;
 
@@ -42,9 +43,16 @@ async function registerAndLoginUser(req, res, userData) {
 	}
 
 	const queue = await user.shouldQueueUser(req.ip);
-	const result = await plugins.hooks.fire('filter:register.shouldQueue', { req: req, res: res, userData: userData, queue: queue });
+	const roleRequiresApproval = roles.requiresApproval(userData.role);
+	const result = await plugins.hooks.fire('filter:register.shouldQueue', { req: req, res: res, userData: userData, queue: queue || roleRequiresApproval });
 	if (result.queue) {
-		return await addToApprovalQueue(req, userData);
+		const queueResult = await addToApprovalQueue(req, userData);
+		const next = `${nconf.get('relative_path')}/register/pending`;
+		if (req.body?.noscript === 'true') {
+			res.redirect(next);
+			return;
+		}
+		return { ...queueResult, next };
 	}
 
 	const uid = await user.create(userData);
@@ -82,6 +90,7 @@ authenticationController.register = async function (req, res) {
 
 	const userData = req.body;
 	try {
+		userData.role = roles.normalizeRole(userData.role);
 		if (userData.token || registrationType === 'invite-only' || registrationType === 'admin-invite-only') {
 			await user.verifyInvitation(userData);
 		}

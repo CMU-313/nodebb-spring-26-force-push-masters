@@ -223,6 +223,15 @@ Controllers.registerInterstitial = async function (req, res, next) {
 	}
 };
 
+Controllers.registerPending = async function (req, res) {
+	res.render('registerPending', {
+		title: '[[pages:registration]]',
+		breadcrumbs: helpers.buildBreadcrumbs([{
+			text: '[[register:register]]',
+		}]),
+	});
+};
+
 Controllers.confirmEmail = async (req, res) => {
 	function renderPage(opts = {}) {
 		res.render('confirm', {
