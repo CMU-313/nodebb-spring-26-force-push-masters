@@ -237,6 +237,8 @@ TopicObjectSlim:
           type: string
         locked:
           type: number
+        resolved:
+          type: number
         pinned:
           type: number
           description: Whether or not this particular topic is pinned to the top of the
