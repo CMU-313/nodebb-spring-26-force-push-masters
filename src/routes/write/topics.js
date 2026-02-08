@@ -23,6 +23,10 @@ module.exports = function () {
 
 	setupApiRoute(router, 'put', '/:tid/lock', [...middlewares], controllers.write.topics.lock);
 	setupApiRoute(router, 'delete', '/:tid/lock', [...middlewares], controllers.write.topics.unlock);
+	
+	// Moderation workflow: mark topic as resolved/unresolved.
+	setupApiRoute(router, 'put', '/:tid/resolve', [...middlewares], controllers.write.topics.resolve);
+	setupApiRoute(router, 'delete', '/:tid/resolve', [...middlewares], controllers.write.topics.unresolve);
 
 	setupApiRoute(router, 'put', '/:tid/resolve', [...middlewares, middleware.assert.topic], controllers.write.topics.resolve);
 	setupApiRoute(router, 'delete', '/:tid/resolve', [...middlewares, middleware.assert.topic], controllers.write.topics.unresolve);

@@ -165,12 +165,14 @@ topicsAPI.unlock = async function (caller, data) {
 	});
 };
 
+// Broadcasts resolve action and delegates permission/data updates to topics.tools.resolve.
 topicsAPI.resolve = async function (caller, data) {
 	await doTopicAction('resolve', 'event:topic_resolved', caller, {
 		tids: data.tids,
 	});
 };
 
+// Broadcasts unresolve action and delegates permission/data updates to topics.tools.unresolve.
 topicsAPI.unresolve = async function (caller, data) {
 	await doTopicAction('unresolve', 'event:topic_unresolved', caller, {
 		tids: data.tids,
