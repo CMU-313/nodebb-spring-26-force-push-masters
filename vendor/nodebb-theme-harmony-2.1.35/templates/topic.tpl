@@ -37,7 +37,7 @@
 				</h1>
 
 				<div class="topic-info d-flex gap-2 align-items-center flex-wrap {{{ if config.theme.centerHeaderElements }}}justify-content-center{{{ end }}}">
-					<span component="topic/labels" class="d-flex gap-2 {{{ if (!scheduled && (!pinned && (!locked && (!icons.length && (!oldCid || (oldCid == "-1")))))) }}}hidden{{{ end }}}">
+					<span component="topic/labels" class="d-flex gap-2 {{{ if (!scheduled && (!pinned && (!locked && (!resolved && (!icons.length && (!oldCid || (oldCid == "-1"))))))) }}}hidden{{{ end }}}">
 						<span component="topic/scheduled" class="badge badge border border-gray-300 text-body {{{ if !scheduled }}}hidden{{{ end }}}">
 							<i class="fa fa-clock-o"></i> [[topic:scheduled]]
 						</span>
@@ -46,6 +46,9 @@
 						</span>
 						<span component="topic/locked" class="badge badge border border-gray-300 text-body {{{ if !locked }}}hidden{{{ end }}}">
 							<i class="fa fa-lock"></i> [[topic:locked]]
+						</span>
+						<span component="topic/resolved-badge" class="badge badge border border-gray-300 text-body {{{ if !resolved }}}hidden{{{ end }}}">
+							<i class="fa fa-check-circle"></i> [[topic:resolved]]
 						</span>
 						<a component="topic/moved" href="{config.relative_path}/category/{oldCid}" class="badge badge border border-gray-300 text-body text-decoration-none {{{ if (!oldCid || (oldCid == "-1")) }}}hidden{{{ end }}}">
 							<i class="fa fa-arrow-circle-right"></i> {{{ if privileges.isAdminOrMod }}}[[topic:moved-from, {oldCategory.name}]]{{{ else }}}[[topic:moved]]{{{ end }}}
@@ -61,7 +64,7 @@
 		</div>
 
 		<div class="row mb-4 mb-lg-0">
-			<div class="topic {{{ if widgets.sidebar.length }}}col-lg-9 col-sm-12{{{ else }}}col-lg-12{{{ end }}}">
+			<div class="topic {{{ if resolved }}}topic-resolved{{{ end }}} {{{ if widgets.sidebar.length }}}col-lg-9 col-sm-12{{{ else }}}col-lg-12{{{ end }}}">
 				<!-- IMPORT partials/post_bar.tpl -->
 				{{{ if merger }}}
 				<!-- IMPORT partials/topic/merged-message.tpl -->

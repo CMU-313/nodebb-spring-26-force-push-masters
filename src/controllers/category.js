@@ -102,6 +102,7 @@ categoryController.get = async function (req, res, next) {
 		query: req.query,
 		tag: req.query.tag,
 		targetUid: targetUid,
+		resolved: req.query.resolved,
 	});
 	if (!categoryData) {
 		return next();
@@ -141,6 +142,9 @@ categoryController.get = async function (req, res, next) {
 	}
 
 	categoryData.title = translator.escape(categoryData.name);
+	categoryData.resolvedFilter = req.query.resolved === '1';
+	categoryData.resolvedFilterUrlAll = helpers.buildQueryString(req.query, 'resolved', '');
+	categoryData.resolvedFilterUrlResolved = helpers.buildQueryString(req.query, 'resolved', '1');
 	categoryData.selectCategoryLabel = '[[category:subcategories]]';
 	categoryData.description = translator.escape(categoryData.description);
 	categoryData.privileges = userPrivileges;

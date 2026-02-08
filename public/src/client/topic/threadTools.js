@@ -412,6 +412,11 @@ define('forum/topic/threadTools', [
 
 		components.get('topic/resolve').toggleClass('hidden', data.resolved).parent().attr('hidden', data.resolved ? '' : null);
 		components.get('topic/unresolve').toggleClass('hidden', !data.resolved).parent().attr('hidden', !data.resolved ? '' : null);
+		const resolvedBadge = components.get('topic/resolved-badge');
+		if (resolvedBadge.length) {
+			resolvedBadge.toggleClass('hidden', !data.resolved);
+		}
+		threadEl.toggleClass('topic-resolved', !!data.resolved);
 		ajaxify.data.resolved = data.resolved ? 1 : 0;
 
 		posts.addTopicEvents(data.events);

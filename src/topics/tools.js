@@ -141,6 +141,14 @@ module.exports = function (Topics) {
 		// Persist resolved state in DB
 		await Topics.setTopicField(tid, 'resolved', resolve ? 1 : 0);
 
+		// Update category resolved set for filtering
+		const resolvedSet = `cid:${topicData.cid}:tids:resolved`;
+		if (resolve) {
+			await db.sortedSetAdd(resolvedSet, 1, tid);
+		} else {
+			await db.sortedSetRemove(resolvedSet, tid);
+		}
+
 		// Log a topic event so it appears in the topic timeline (like lock/pin)
 		topicData.events = await Topics.events.log(tid, { type: resolve ? 'resolve' : 'unresolve', uid });
 		topicData.resolved = resolve ? 1 : 0;

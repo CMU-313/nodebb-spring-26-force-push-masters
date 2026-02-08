@@ -31,6 +31,7 @@ require('./teaser')(Topics);
 Topics.scheduled = require('./scheduled');
 require('./suggested')(Topics);
 require('./tools')(Topics);
+require('./autoResolve')(Topics);
 Topics.thumbs = require('./thumbs');
 require('./bookmarks')(Topics);
 require('./merge')(Topics);

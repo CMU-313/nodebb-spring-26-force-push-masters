@@ -117,6 +117,10 @@ module.exports = function (Categories) {
 			set.add(`cid:${cid}:uid:${data.targetUid}:tids`);
 		}
 
+		if (data.resolved === '1' || data.resolved === 1 || data.resolved === true) {
+			set.add(`cid:${cid}:tids:resolved`);
+		}
+
 		if (parseInt(cid, 10) === -1 && uid > 0) {
 			set.delete(mainSet);
 			set.add(`uid:${uid}:inbox`);
