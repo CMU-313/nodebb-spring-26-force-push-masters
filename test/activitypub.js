@@ -320,7 +320,12 @@ describe('ActivityPub integration', () => {
 							actor: 'https://example.org/user/foobar',
 							object: remoteNote,
 						},
-					}, { sendStatus: () => {} });
+					}, {
+						req: { method: 'POST', loggedIn: false },
+						sendStatus: () => {},
+						status: () => ({ json: () => {}, set: () => {} }),
+						set: () => {},
+					});
 				});
 
 				it('should create a new topic if Note is at root-level or its parent has not been seen before', async () => {

@@ -243,7 +243,7 @@ TopicObjectSlim:
             category
         resolved:
           type: number
-          description: Whether the topic has been marked as resolved
+          description: "Whether the topic has been marked as resolved"
         timestamp:
           type: number
         timestampISO:

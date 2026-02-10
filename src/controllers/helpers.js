@@ -448,12 +448,12 @@ helpers.getHomePageRoutes = async function (uid) {
 };
 
 helpers.formatApiResponse = async (statusCode, res, payload) => {
-	if (res.req.method === 'HEAD') {
+	if (res.req && res.req.method === 'HEAD') {
 		return res.sendStatus(statusCode);
 	}
 
 	if (String(statusCode).startsWith('2')) {
-		if (res.req.loggedIn) {
+		if (res.req && res.req.loggedIn) {
 			res.set('cache-control', 'private');
 		}
 
