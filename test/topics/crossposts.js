@@ -366,10 +366,18 @@ describe('Crossposting (& related logic)', () => {
 		let remoteCid;
 		let pid;
 		let post;
+		let ciEnv;
+		let originalIsAllowed;
 
 		const helpers = require('../activitypub/helpers');
 
 		before(async () => {
+			// Use cache and allow example.org so assert(actor) and note fetch succeed
+			ciEnv = process.env.CI;
+			process.env.CI = 'true';
+			originalIsAllowed = activitypub.instances.isAllowed;
+			activitypub.instances.isAllowed = (domain) => domain === 'example.org' || originalIsAllowed(domain);
+
 			({ cid } = await categories.create({ name: utils.generateUUID().slice(0, 8) }));
 			({ id: remoteCid } = helpers.mocks.group());
 			({ id: pid, note: post } = helpers.mocks.note({
@@ -382,6 +390,17 @@ describe('Crossposting (& related logic)', () => {
 				db.sortedSetAdd(`cid:${cid}:following`, timestamp, remoteCid),
 				db.sortedSetAdd(`followersRemote:${remoteCid}`, timestamp, `cid|${cid}`),
 			]);
+		});
+
+		after(() => {
+			if (ciEnv !== undefined) {
+				process.env.CI = ciEnv;
+			} else {
+				delete process.env.CI;
+			}
+			if (originalIsAllowed) {
+				activitypub.instances.isAllowed = originalIsAllowed;
+			}
 		});
 
 		it('should automatically cross-post the topic when the remote category announces', async () => {
@@ -415,10 +434,17 @@ describe('Crossposting (& related logic)', () => {
 		let remoteCid;
 		let pid;
 		let post;
+		let ciEnv;
+		let originalIsAllowed;
 
 		const helpers = require('../activitypub/helpers');
 
 		before(async () => {
+			ciEnv = process.env.CI;
+			process.env.CI = 'true';
+			originalIsAllowed = activitypub.instances.isAllowed;
+			activitypub.instances.isAllowed = (domain) => domain === 'example.org' || originalIsAllowed(domain);
+
 			const preferredUsername = utils.generateUUID().slice(0, 8);
 			({ cid } = await categories.create({ name: utils.generateUUID().slice(0, 8) }));
 			({ id: remoteCid } = helpers.mocks.group({
@@ -435,6 +461,17 @@ describe('Crossposting (& related logic)', () => {
 			}));
 
 			await activitypub.rules.add('hashtag', preferredUsername, cid);
+		});
+
+		after(() => {
+			if (ciEnv !== undefined) {
+				process.env.CI = ciEnv;
+			} else {
+				delete process.env.CI;
+			}
+			if (originalIsAllowed) {
+				activitypub.instances.isAllowed = originalIsAllowed;
+			}
 		});
 
 		it('note assertion should automatically cross-post', async () => {
@@ -458,6 +495,38 @@ describe('Crossposting (& related logic)', () => {
 	});
 
 	describe('ActivityPub effects (or lack thereof)', () => {
+		let ciEnv;
+		let originalIsAllowed;
+		let originalIsUri;
+
+		before(async () => {
+			ciEnv = process.env.CI;
+			process.env.CI = 'true';
+			originalIsAllowed = activitypub.instances.isAllowed;
+			activitypub.instances.isAllowed = (domain) => domain === 'example.org' || originalIsAllowed(domain);
+			// Allow local http URLs so resolveLocalId(object.id) accepts category URLs
+			originalIsUri = activitypub.helpers.isUri;
+			const baseUrl = nconf.get('url_parsed') && nconf.get('url_parsed').host;
+			activitypub.helpers.isUri = (value) => {
+				if (typeof value === 'string' && (value.startsWith('http://') || value.startsWith('https://')) && baseUrl && value.includes(baseUrl)) {
+					return true;
+				}
+				return originalIsUri(value);
+			};
+		});
+
+		after(() => {
+			if (ciEnv !== undefined) {
+				process.env.CI = ciEnv;
+			} else {
+				delete process.env.CI;
+			}
+			if (originalIsAllowed) {
+				activitypub.instances.isAllowed = originalIsAllowed;
+			}
+			activitypub.helpers.isUri = originalIsUri;
+		});
+
 		describe('local canonical category', () => {
 			let tid;
 			let cid1;

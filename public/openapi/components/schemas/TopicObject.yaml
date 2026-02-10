@@ -241,6 +241,9 @@ TopicObjectSlim:
           type: number
           description: Whether or not this particular topic is pinned to the top of the
             category
+        resolved:
+          type: number
+          description: Whether the topic has been marked as resolved
         timestamp:
           type: number
         timestampISO:

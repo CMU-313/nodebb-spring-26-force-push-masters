@@ -19,7 +19,7 @@ module.exports = {
 			);
 
 			const toAdd = [];
-			topicData.forEach((topic, idx) => {
+			topicData.forEach((topic) => {
 				if (topic && parseInt(topic.resolved, 10) === 1 && topic.cid) {
 					toAdd.push([`cid:${topic.cid}:tids:resolved`, 1, topic.tid]);
 				}

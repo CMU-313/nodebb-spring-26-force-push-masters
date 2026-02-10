@@ -164,6 +164,8 @@ paths:
     $ref: 'write/topics/tid/events/eventId.yaml'
   /topics/{tid}/read:
     $ref: 'write/topics/tid/read.yaml'
+  /topics/{tid}/resolve:
+    $ref: 'write/topics/tid/resolve.yaml'
   /topics/{tid}/bump:
     $ref: 'write/topics/tid/bump.yaml'
   /topics/{tid}/move:

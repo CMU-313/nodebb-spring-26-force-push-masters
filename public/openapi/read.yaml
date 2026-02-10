@@ -242,6 +242,8 @@ paths:
     $ref: 'read/register.yaml'
   /api/register/complete:
     $ref: 'read/register/complete.yaml'
+  /api/register/pending:
+    $ref: 'read/register/pending.yaml'
   "/api/confirm/{code}":
     $ref: 'read/confirm/code.yaml'
   /api/tos:

@@ -206,9 +206,28 @@ describe.skip('Privilege logic for remote users/content (ActivityPub)', () => {
 });
 
 describe('Privilege masking', () => {
+	let ciEnv;
+	let originalIsAllowed;
+
 	before(async () => {
 		// Grant default fediverse privileges
 		await install.giveWorldPrivileges();
+		// Use cache and allow example.org so assertGroup can resolve mock groups
+		ciEnv = process.env.CI;
+		process.env.CI = 'true';
+		originalIsAllowed = activitypub.instances.isAllowed;
+		activitypub.instances.isAllowed = (domain) => domain === 'example.org' || originalIsAllowed(domain);
+	});
+
+	after(() => {
+		if (ciEnv !== undefined) {
+			process.env.CI = ciEnv;
+		} else {
+			delete process.env.CI;
+		}
+		if (originalIsAllowed) {
+			activitypub.instances.isAllowed = originalIsAllowed;
+		}
 	});
 
 	describe('control', () => {

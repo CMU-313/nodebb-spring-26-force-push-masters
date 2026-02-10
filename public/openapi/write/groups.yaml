@@ -52,6 +52,13 @@ get:
                                     type: string
                                     description: A friendly name for a given user account
                                     example: Dragon Fruit
+                                  picture:
+                                    type: string
+                                    nullable: true
+                                    description: URL to user avatar
+                                  isLocal:
+                                    type: boolean
+                                    description: Whether the user belongs to the local installation
                                   userslug:
                                     type: string
                                     description: An URL-safe variant of the username (i.e. lower-cased, spaces removed, etc.)

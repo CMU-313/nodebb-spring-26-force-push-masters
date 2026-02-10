@@ -43,7 +43,7 @@ module.exports = function (Topics) {
 				if (cid && utils.isNumber(cid)) {
 					await db.sortedSetAdd(`cid:${cid}:tids:resolved`, 1, post.tid);
 				}
-		},
+			},
 		});
 	});
 };
