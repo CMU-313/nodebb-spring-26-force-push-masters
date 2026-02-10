@@ -36,7 +36,8 @@ privsTopics.get = async function (tid, uid) {
 		}),
 	]);
 	const privData = _.zipObject(privs, userPrivileges);
-	const isOwner = uid > 0 && uid === topicData.uid;
+	const topicUid = parseInt(topicData.uid, 10);
+	const isOwner = uid > 0 && topicUid > 0 && uid === topicUid;
 	const isAdminOrMod = isAdministrator || isModerator;
 	const editable = isAdminOrMod;
 	const deletable = (privData['topics:delete'] && (isOwner || isModerator)) || isAdministrator;
@@ -58,7 +59,7 @@ privsTopics.get = async function (tid, uid) {
 		read: privData.read || isAdministrator,
 		purge: (privData.purge && (isOwner || isModerator)) || isAdministrator,
 
-		view_thread_tools: editable || deletable || hasTools,
+		view_thread_tools: editable || deletable || hasTools || isOwner,
 		editable: editable,
 		deletable: deletable,
 		view_deleted: isAdminOrMod || isOwner || privData['posts:view_deleted'],

@@ -18,11 +18,15 @@ module.exports = function (SocketTopics) {
 		if (!topicData) {
 			throw new Error('[[error:no-topic]]');
 		}
-		if (!userPrivileges['topics:read'] || !userPrivileges.view_thread_tools) {
+		if (!userPrivileges['topics:read']) {
 			throw new Error('[[error:no-privileges]]');
 		}
 		topicData.privileges = userPrivileges;
 		topicData.isOwner = parseInt(topicData.uid, 10) > 0 && parseInt(topicData.uid, 10) === parseInt(socket.uid, 10);
+		if (!userPrivileges.view_thread_tools) {
+			topicData.thread_tools = [];
+			return topicData;
+		}
 		const result = await plugins.hooks.fire('filter:topic.thread_tools', {
 			topic: topicData,
 			uid: socket.uid,
