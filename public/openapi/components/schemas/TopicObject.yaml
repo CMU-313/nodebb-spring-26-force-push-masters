@@ -181,23 +181,12 @@ TopicObject:
             type: string
             description: HTML injected into the theme
     - type: object
-      description: Optional properties that may or may not be present (except for `tid`, which is always present, and is only here as a hack to pass validation)
+      description: Optional properties that may or may not be present (tid, pinExpiry, pinExpiryISO come from TopicObjectSlim)
       properties:
-        tid:
-          type: number
-          description: A topic identifier
         thumb:
           type: string
-        pinExpiry:
-          type: number
-          description: A UNIX timestamp indicating when a pinned topic will no longer be pinned (i.e. the pin has expired)
-        pinExpiryISO:
-          type: string
-          description: "`pinExpiry` rendered as an ISO 8601 format"
         index:
           type: number
-      required:
-        - tid
 TopicObjectSlim:
   description: The output of a call to `Topics.getTopicField`, these properties are always present no matter the fields passed in
   allOf:
@@ -289,13 +278,8 @@ TopicObjectSlim:
                 type: string
                 description: Relative path to the topic thumbnail
     - type: object
-      description: Optional properties that may or may not be present (except for `tid`, which is always present, and is only here as a hack to pass validation)
+      description: Optional properties that may or may not be present
       properties:
-        tid:
-          type: number
-          description: A topic identifier
         numThumbs:
           type: number
           description: The number of thumbnails associated with this topic
-      required:
-        - tid
