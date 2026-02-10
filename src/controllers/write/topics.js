@@ -90,11 +90,13 @@ Topics.unlock = async (req, res) => {
 	helpers.formatApiResponse(200, res);
 };
 
+// Topic moderation action: set resolved state.
 Topics.resolve = async (req, res) => {
 	await api.topics.resolve(req, { tids: [req.params.tid] });
 	helpers.formatApiResponse(200, res);
 };
 
+// Topic moderation action: clear resolved state.
 Topics.unresolve = async (req, res) => {
 	await api.topics.unresolve(req, { tids: [req.params.tid] });
 	helpers.formatApiResponse(200, res);
