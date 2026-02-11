@@ -410,14 +410,23 @@ define('forum/topic/threadTools', [
 			return;
 		}
 
+		// Topic wrapper (div.topic) is the correct container; threadEl is the posts <ul>
+		const topicWrapper = threadEl.closest('.topic');
+
 		components.get('topic/resolve').toggleClass('hidden', data.resolved).parent().attr('hidden', data.resolved ? '' : null);
 		components.get('topic/unresolve').toggleClass('hidden', !data.resolved).parent().attr('hidden', !data.resolved ? '' : null);
 		const resolvedBadge = components.get('topic/resolved-badge');
 		if (resolvedBadge.length) {
 			resolvedBadge.toggleClass('hidden', !data.resolved);
 		}
-		threadEl.toggleClass('topic-resolved', !!data.resolved);
+		topicWrapper.toggleClass('topic-resolved', !!data.resolved);
 		ajaxify.data.resolved = data.resolved ? 1 : 0;
+
+		// Invalidate cached tools menu in all tool instances (post_bar + sidebar) so next open refetches
+		topicWrapper.find('.thread-tools .dropdown-menu').removeAttr('data-loaded');
+
+		// Keep the gear button visible so user can open menu and choose Unresolve (no parent/container hidden)
+		topicWrapper.find('.thread-tools').removeClass('hidden').css('display', '');
 
 		posts.addTopicEvents(data.events);
 	};

@@ -157,6 +157,9 @@ get:
                       uid:
                         type: number
                         description: A user identifier
+                  isOwner:
+                    type: boolean
+                    description: Whether the requesting user is the topic author
                   topicStaleDays:
                     type: number
                   reputation:disabled:

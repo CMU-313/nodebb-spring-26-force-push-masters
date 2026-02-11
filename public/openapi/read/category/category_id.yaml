@@ -119,6 +119,15 @@ get:
                       type: string
                   sortOptionLabel:
                     type: string
+                  resolvedFilter:
+                    type: boolean
+                    description: Whether the resolved filter is currently active
+                  resolvedFilterUrlAll:
+                    type: string
+                    description: URL query string for showing all topics
+                  resolvedFilterUrlResolved:
+                    type: string
+                    description: URL query string for showing only resolved topics
                   handleFull:
                     type: string
                     description: |

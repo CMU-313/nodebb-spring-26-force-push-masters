@@ -180,24 +180,9 @@ TopicObject:
           items:
             type: string
             description: HTML injected into the theme
-    - type: object
-      description: Optional properties that may or may not be present (except for `tid`, which is always present, and is only here as a hack to pass validation)
-      properties:
-        tid:
-          type: number
-          description: A topic identifier
-        thumb:
-          type: string
-        pinExpiry:
-          type: number
-          description: A UNIX timestamp indicating when a pinned topic will no longer be pinned (i.e. the pin has expired)
-        pinExpiryISO:
-          type: string
-          description: "`pinExpiry` rendered as an ISO 8601 format"
-        index:
-          type: number
       required:
-        - tid
+        - user
+    
 TopicObjectSlim:
   description: The output of a call to `Topics.getTopicField`, these properties are always present no matter the fields passed in
   allOf:
@@ -237,12 +222,13 @@ TopicObjectSlim:
           type: string
         locked:
           type: number
-        resolved:
-          type: number
         pinned:
           type: number
           description: Whether or not this particular topic is pinned to the top of the
             category
+        resolved:
+          type: number
+          description: "Whether the topic has been marked as resolved"
         timestamp:
           type: number
         timestampISO:
@@ -287,12 +273,13 @@ TopicObjectSlim:
               url:
                 type: string
                 description: Relative path to the topic thumbnail
-    - type: object
-      description: Optional properties that may or may not be present (except for `tid`, which is always present, and is only here as a hack to pass validation)
-      properties:
-        tid:
+        index:
           type: number
-          description: A topic identifier
+      required:
+        - tid
+    - type: object
+      description: Optional properties that may or may not be present
+      properties:
         numThumbs:
           type: number
           description: The number of thumbnails associated with this topic

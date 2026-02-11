@@ -25,10 +25,19 @@ describe('as:Person (Actor asserton)', () => {
 	describe('happy path', () => {
 		let uid;
 		let actorUri;
+		let ciEnv;
+		let originalIsAllowed;
 
 		before(async () => {
 			uid = utils.generateUUID().slice(0, 8);
 			actorUri = `https://example.org/user/${uid}`;
+			// Test-only: use cache in get() and allow example.org (no app logic change)
+			ciEnv = process.env.CI;
+			process.env.CI = 'true';
+			originalIsAllowed = activitypub.instances.isAllowed;
+			activitypub.instances.isAllowed = (domain) => domain === 'example.org' || originalIsAllowed(domain);
+			meta.config.activitypubFilter = 1;
+			meta.config.activitypubFilterList = 'example.org';
 			activitypub._cache.set(`0;${actorUri}`, {
 				'@context': 'https://www.w3.org/ns/activitystreams',
 				id: actorUri,
@@ -47,6 +56,15 @@ describe('as:Person (Actor asserton)', () => {
 				},
 			});
 			activitypub.helpers._webfingerCache.set('example@example.org', { actorUri });
+		});
+
+		after(() => {
+			if (originalIsAllowed) {
+				activitypub.instances.isAllowed = originalIsAllowed;
+			}
+			if (ciEnv !== undefined) {
+				process.env.CI = ciEnv;
+			}
 		});
 
 		it('should return true if successfully asserted', async () => {
@@ -79,6 +97,27 @@ describe('as:Person (Actor asserton)', () => {
 	});
 
 	describe('less happy paths', () => {
+		let lessHappyCiEnv;
+		let lessHappyOriginalIsAllowed;
+
+		before(() => {
+			lessHappyCiEnv = process.env.CI;
+			process.env.CI = 'true';
+			lessHappyOriginalIsAllowed = activitypub.instances.isAllowed;
+			activitypub.instances.isAllowed = (domain) => domain === 'example.org' || lessHappyOriginalIsAllowed(domain);
+			meta.config.activitypubFilter = 1;
+			meta.config.activitypubFilterList = 'example.org';
+		});
+
+		after(() => {
+			if (lessHappyOriginalIsAllowed) {
+				activitypub.instances.isAllowed = lessHappyOriginalIsAllowed;
+			}
+			if (lessHappyCiEnv !== undefined) {
+				process.env.CI = lessHappyCiEnv;
+			}
+		});
+
 		describe('actor with `preferredUsername` that is not all lowercase', () => {
 			it('should save a handle-to-uid association', async () => {
 				const preferredUsername = 'nameWITHCAPS';
@@ -123,8 +162,28 @@ describe('as:Person (Actor asserton)', () => {
 	describe('edge cases: loopback handles and uris', () => {
 		let uid;
 		const userslug = utils.generateUUID().slice(0, 8);
+		let loopbackAllowLoopback;
+		let originalIsUri;
+
 		before(async () => {
 			uid = await user.create({ username: userslug });
+			// Ensure loopback filter runs so local handle/uri are not asserted (no userRemote created)
+			loopbackAllowLoopback = meta.config.activitypubAllowLoopback;
+			meta.config.activitypubAllowLoopback = 0;
+			// Allow local http URI so qualify() accepts it (then filter removes it; test uses http base URL)
+			originalIsUri = activitypub.helpers.isUri;
+			const baseUrl = nconf.get('url_parsed') && nconf.get('url_parsed').host;
+			activitypub.helpers.isUri = (value) => {
+				if (typeof value === 'string' && (value.startsWith('http://') || value.startsWith('https://')) && baseUrl && value.includes(baseUrl)) {
+					return true;
+				}
+				return originalIsUri(value);
+			};
+		});
+
+		after(() => {
+			meta.config.activitypubAllowLoopback = loopbackAllowLoopback;
+			activitypub.helpers.isUri = originalIsUri;
 		});
 
 		it('should return true but not actually assert the handle into the database', async () => {
@@ -140,7 +199,10 @@ describe('as:Person (Actor asserton)', () => {
 		});
 
 		it('should return true but not actually assert the uri into the database', async () => {
-			const uri = `${nconf.get('url')}/uid/${uid}`;
+			// Build URI from url_parsed so loopback filter (host match) reliably removes it
+			const parsed = nconf.get('url_parsed');
+			const path = (parsed.pathname && parsed.pathname !== '/' ? parsed.pathname.replace(/\/+$/, '') : '');
+			const uri = `${parsed.protocol}//${parsed.host}${path}/uid/${uid}`;
 			const result = await activitypub.actors.assert([uri]);
 			assert(result);
 

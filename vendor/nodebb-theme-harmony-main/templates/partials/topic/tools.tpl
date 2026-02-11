@@ -1,4 +1,4 @@
-{{{ if privileges.view_thread_tools }}}
+{{{ if loggedIn }}}
 <div class="btn-group thread-tools bottom-sheet">
 	<button class="btn btn-ghost btn-sm ff-secondary d-flex align-items-center gap-2 dropdown-toggle text-truncate" data-bs-toggle="dropdown" type="button" aria-haspopup="true" aria-expanded="false">
 		<i class="fa fa-fw fa-gear text-primary"></i>

@@ -148,6 +148,34 @@ GroupFullObject:
       type: boolean
     isOwner:
       type: boolean
+    selected:
+      type: boolean
+      description: Whether this group is selected for the user (e.g. on edit page)
+  required:
+    - name
+    - slug
+    - createtime
+    - userTitle
+    - userTitleEnabled
+    - description
+    - memberCount
+    - hidden
+    - system
+    - private
+    - disableJoinRequests
+    - disableLeave
+    - nameEncoded
+    - displayName
+    - userTitleEscaped
+    - labelColor
+    - textColor
+    - icon
+    - createtimeISO
+    - cover:thumb:url
+    - cover:url
+    - cover:position
+    - memberPostCids
+    - memberPostCidsArray
   nullable: true
 GroupDataObject:
   type: object

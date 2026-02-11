@@ -46,12 +46,12 @@ get:
                           type: number
                         userTitle:
                           type: string
+                        userTitleEscaped:
+                          type: string
                         description:
                           type: string
                         memberCount:
                           type: number
-                        deleted:
-                          type: string
                         hidden:
                           type: number
                         system:
@@ -84,5 +84,33 @@ get:
                           type: string
                         cover:thumb:url:
                           type: string
+                        memberPostCids:
+                          type: string
+                        memberPostCidsArray:
+                          type: array
+                          items:
+                            type: number
+                      required:
+                        - name
+                        - slug
+                        - createtime
+                        - userTitle
+                        - description
+                        - memberCount
+                        - hidden
+                        - system
+                        - private
+                        - icon
+                        - labelColor
+                        - cover:url
+                        - cover:position
+                        - userTitleEnabled
+                        - disableJoinRequests
+                        - disableLeave
+                        - nameEncoded
+                        - displayName
+                        - textColor
+                        - createtimeISO
+                        - cover:thumb:url
               - $ref: ../../components/schemas/Breadcrumbs.yaml#/Breadcrumbs
               - $ref: ../../components/schemas/CommonProps.yaml#/CommonProps

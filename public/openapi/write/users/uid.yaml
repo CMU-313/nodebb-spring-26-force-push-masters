@@ -121,6 +121,8 @@ put:
                 $ref: ../../components/schemas/Status.yaml#/Status
               response:
                 $ref: ../../components/schemas/UserObj.yaml#/UserObj
+    '400':
+      description: Bad request (e.g. validation error)
     '401':
       $ref: ../../components/responses/401.yaml#/401
     '403':

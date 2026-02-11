@@ -32,6 +32,8 @@ put:
   responses:
     '200':
       description: successfully updated user picture
+    '400':
+      description: Bad request (e.g. validation error)
       content:
         application/json:
           schema:

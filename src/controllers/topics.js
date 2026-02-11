@@ -94,6 +94,7 @@ topicsController.get = async function getTopic(req, res, next) {
 	topicData.tagWhitelist = categories.filterTagWhitelist(topicData.tagWhitelist, userPrivileges.isAdminOrMod);
 
 	topicData.privileges = userPrivileges;
+	topicData.isOwner = !!req.uid && parseInt(topicData.uid, 10) === parseInt(req.uid, 10);
 	topicData.topicStaleDays = meta.config.topicStaleDays;
 	topicData['reputation:disabled'] = meta.config['reputation:disabled'];
 	topicData['downvote:disabled'] = meta.config['downvote:disabled'];

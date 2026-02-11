@@ -78,6 +78,12 @@ get:
                               username:
                                 type: string
                                 description: A friendly name for a given user account
+                              displayname:
+                                type: string
+                                description: Display name for the user
+                              isLocal:
+                                type: boolean
+                                description: Whether the user belongs to the local installation
                               picture:
                                 nullable: true
                                 type: string

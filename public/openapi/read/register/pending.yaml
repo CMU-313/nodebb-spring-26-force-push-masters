@@ -1,0 +1,12 @@
+get:
+  tags:
+    - authentication
+  summary: Get pending registration data
+  responses:
+    "200":
+      description: Pending registration information
+      content:
+        application/json:
+          schema:
+            type: object
+            additionalProperties: true

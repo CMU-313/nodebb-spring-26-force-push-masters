@@ -85,6 +85,7 @@ describe('http signature signing and verification', () => {
 	describe('.verify()', () => {
 		let uid;
 		let username;
+		let originalFetchPublicKey;
 		const baseUrl = nconf.get('relative_path');
 		const mockReqBase = {
 			method: 'GET',
@@ -101,6 +102,16 @@ describe('http signature signing and verification', () => {
 		before(async () => {
 			username = utils.generateUUID().slice(0, 10);
 			uid = await user.create({ username });
+			// Stub so verify can get the public key without an HTTP request to self
+			originalFetchPublicKey = activitypub.fetchPublicKey;
+			activitypub.fetchPublicKey = async (keyIdUri) => {
+				const { publicKey } = await db.getObject(`uid:${uid}:keys`);
+				return { publicKeyPem: publicKey };
+			};
+		});
+
+		after(() => {
+			activitypub.fetchPublicKey = originalFetchPublicKey;
 		});
 
 		it('should return true when the proper signature and relevant headers are passed in', async () => {
