@@ -180,13 +180,9 @@ TopicObject:
           items:
             type: string
             description: HTML injected into the theme
-    - type: object
-      description: Optional properties that may or may not be present (tid, pinExpiry, pinExpiryISO come from TopicObjectSlim)
-      properties:
-        thumb:
-          type: string
-        index:
-          type: number
+      required:
+        - user
+    
 TopicObjectSlim:
   description: The output of a call to `Topics.getTopicField`, these properties are always present no matter the fields passed in
   allOf:
@@ -225,8 +221,6 @@ TopicObjectSlim:
         titleRaw:
           type: string
         locked:
-          type: number
-        resolved:
           type: number
         pinned:
           type: number
@@ -279,6 +273,10 @@ TopicObjectSlim:
               url:
                 type: string
                 description: Relative path to the topic thumbnail
+        index:
+          type: number
+      required:
+        - tid
     - type: object
       description: Optional properties that may or may not be present
       properties:

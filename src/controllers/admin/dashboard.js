@@ -331,6 +331,15 @@ dashboardController.getTopics = async (req, res) => {
 	const tids = await db.getSortedSetRangeByScore('topics:tid', 0, 500, start, end);
 	const topicData = await topics.getTopicsByTids(tids);
 
+	// Ensure topics include an `index` property for listing contexts
+	if (Array.isArray(topicData)) {
+		topicData.forEach((t, i) => {
+			if (t) {
+				t.index = i;
+			}
+		});
+	}
+
 	res.render('admin/dashboard/topics', {
 		set: 'topics',
 		query: _.pick(req.query, ['units', 'until', 'count']),
