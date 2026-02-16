@@ -14,6 +14,7 @@ const plugins = require('../plugins');
 const utils = require('../utils');
 const privsCategories = require('./categories');
 const privsTopics = require('./topics');
+const { isUserInRole } = require('../user/roles');
 
 const privsPosts = module.exports;
 
@@ -21,6 +22,7 @@ privsPosts.get = async function (pids, uid) {
 	if (!Array.isArray(pids) || !pids.length) {
 		return [];
 	}
+	const postFields = await posts.getPostsFields(pids, ['targetRole']);
 	const cids = await posts.getCidsByPids(pids);
 	const uniqueCids = _.uniq(cids);
 
@@ -43,18 +45,26 @@ privsPosts.get = async function (pids, uid) {
 	privData['posts:history'] = _.zipObject(uniqueCids, results['posts:history']);
 	privData['posts:view_deleted'] = _.zipObject(uniqueCids, results['posts:view_deleted']);
 
+	const [isTA, isProfessor] = await Promise.all([
+		isUserInRole(uid, 'ta'),
+		isUserInRole(uid, 'professor'),
+	]);
+	const canSeeRoleRestricted = results.isAdmin || isTA || isProfessor;
+
 	const privileges = cids.map((cid, i) => {
 		const isAdminOrMod = results.isAdmin || isModerator[cid];
 		const editable = (privData['posts:edit'][cid] && (results.isOwner[i] || results.isModerator[i])) || results.isAdmin;
 		const viewDeletedPosts = results.isOwner[i] || privData['posts:view_deleted'][cid] || results.isAdmin;
 		const viewHistory = results.isOwner[i] || privData['posts:history'][cid] || results.isAdmin;
+		const targetRole = postFields[i] && postFields[i].targetRole;
+		const roleAllowed = !targetRole || canSeeRoleRestricted;
 
 		return {
 			editable: editable,
 			move: isAdminOrMod,
 			isAdminOrMod: isAdminOrMod,
 			'topics:read': privData['topics:read'][cid] || results.isAdmin,
-			read: privData.read[cid] || results.isAdmin,
+			read: (privData.read[cid] || results.isAdmin) && roleAllowed,
 			'posts:history': viewHistory,
 			'posts:view_deleted': viewDeletedPosts,
 		};
@@ -74,7 +84,7 @@ privsPosts.filter = async function (privilege, pids, uid) {
 	}
 
 	pids = _.uniq(pids);
-	const postData = await posts.getPostsFields(pids, ['uid', 'tid', 'deleted']);
+	const postData = await posts.getPostsFields(pids, ['uid', 'tid', 'deleted', 'targetRole']);
 	const tids = _.uniq(postData.map(post => post && post.tid).filter(Boolean));
 	const topicData = await topics.getTopicsFields(tids, ['deleted', 'scheduled', 'cid']);
 
@@ -97,6 +107,11 @@ privsPosts.filter = async function (privilege, pids, uid) {
 	const cidsSet = new Set(allowedCids);
 	const canViewDeleted = _.zipObject(cids, results.view_deleted);
 	const canViewScheduled = _.zipObject(cids, results.view_scheduled);
+	const [isTA, isProfessor] = await Promise.all([
+		isUserInRole(uid, 'ta'),
+		isUserInRole(uid, 'professor'),
+	]);
+	const canSeeRoleRestricted = results.isAdmin || isTA || isProfessor;
 
 	pids = postData.filter(post => (
 		post.topic &&
@@ -104,7 +119,8 @@ privsPosts.filter = async function (privilege, pids, uid) {
 		(privsTopics.canViewDeletedScheduled({
 			deleted: post.topic.deleted || post.deleted,
 			scheduled: post.topic.scheduled,
-		}, {}, canViewDeleted[post.topic.cid], canViewScheduled[post.topic.cid]) || results.isAdmin)
+		}, {}, canViewDeleted[post.topic.cid], canViewScheduled[post.topic.cid]) || results.isAdmin) &&
+		(!post.targetRole || canSeeRoleRestricted)
 	)).map(post => post.pid);
 
 	const data = await plugins.hooks.fire('filter:privileges.posts.filter', {
