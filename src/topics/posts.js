@@ -13,6 +13,7 @@ const activitypub = require('../activitypub');
 const plugins = require('../plugins');
 const utils = require('../utils');
 const privileges = require('../privileges');
+const { isUserInRole } = require('../user/roles');
 
 const backlinkRegex = new RegExp(`(?:${nconf.get('url').replace('/', '\\/')}|\b|\\s)\\/topic\\/(\\d+)(?:\\/\\w+)?`, 'g');
 
@@ -60,6 +61,13 @@ module.exports = function (Topics) {
 		await addEventStartEnd(postData, set, reverse, topicData);
 		const allPosts = postData.slice();
 		postData = await user.blocks.filter(uid, postData);
+		const [isAdmin, isTA, isProfessor] = await Promise.all([
+			user.isAdministrator(uid),
+			isUserInRole(uid, 'ta'),
+			isUserInRole(uid, 'professor'),
+		]);
+		const canSeeRoleRestricted = isAdmin || isTA || isProfessor;
+		postData = postData.filter(post => !post.targetRole || canSeeRoleRestricted);
 		if (allPosts.length !== postData.length) {
 			const includedPids = new Set(postData.map(p => p.pid));
 			allPosts.reverse().forEach((p, index) => {

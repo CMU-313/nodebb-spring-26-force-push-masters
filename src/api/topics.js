@@ -10,6 +10,7 @@ const events = require('../events');
 const batch = require('../batch');
 const activitypub = require('../activitypub');
 const utils = require('../utils');
+const { isUserInRole } = require('../user/roles');
 
 const apiHelpers = require('./helpers');
 
@@ -93,6 +94,17 @@ topicsAPI.reply = async function (caller, data) {
 	const payload = { ...data };
 	delete payload.pid;
 	apiHelpers.setDefaultPostData(caller, payload);
+
+	if (payload.targetRole) {
+		const [isAdmin, isTA, isProfessor] = await Promise.all([
+			user.isAdministrator(caller.uid),
+			isUserInRole(caller.uid, 'ta'),
+			isUserInRole(caller.uid, 'professor'),
+		]);
+		if (!isAdmin && !isTA && !isProfessor) {
+			delete payload.targetRole;
+		}
+	}
 
 	await meta.blacklist.test(caller.ip);
 	const shouldQueue = await posts.shouldQueue(caller.uid, payload);
