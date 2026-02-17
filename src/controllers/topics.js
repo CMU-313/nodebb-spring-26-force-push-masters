@@ -14,6 +14,7 @@ const helpers = require('./helpers');
 const pagination = require('../pagination');
 const utils = require('../utils');
 const analytics = require('../analytics');
+const { isUserInRole } = require('../user/roles');
 
 const topicsController = module.exports;
 
@@ -95,6 +96,11 @@ topicsController.get = async function getTopic(req, res, next) {
 
 	topicData.privileges = userPrivileges;
 	topicData.isOwner = !!req.uid && parseInt(topicData.uid, 10) === parseInt(req.uid, 10);
+	const [isTA, isProfessor] = await Promise.all([
+		isUserInRole(req.uid, 'ta'),
+		isUserInRole(req.uid, 'professor'),
+	]);
+	topicData.isInstructor = userPrivileges.isAdminOrMod || isTA || isProfessor;
 	topicData.topicStaleDays = meta.config.topicStaleDays;
 	topicData['reputation:disabled'] = meta.config['reputation:disabled'];
 	topicData['downvote:disabled'] = meta.config['downvote:disabled'];

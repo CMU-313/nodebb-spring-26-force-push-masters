@@ -160,6 +160,9 @@ get:
                   isOwner:
                     type: boolean
                     description: Whether the requesting user is the topic author
+                  isInstructor:
+                    type: boolean
+                    description: Whether the requesting user is an admin, TA, or Professor
                   topicStaleDays:
                     type: number
                   reputation:disabled:

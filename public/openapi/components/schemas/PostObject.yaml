@@ -21,6 +21,10 @@ PostObject:
     sourceContent:
       type: string
       nullable: true
+    targetRole:
+      type: string
+      nullable: true
+      description: If set, restricts post visibility to users in that role (e.g. "ta" or "professor")
     uid:
       type: number
       description: A user identifier

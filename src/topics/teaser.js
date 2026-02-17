@@ -9,6 +9,7 @@ const user = require('../user');
 const posts = require('../posts');
 const plugins = require('../plugins');
 const utils = require('../utils');
+const { isUserInRole } = require('../user/roles');
 
 module.exports = function (Topics) {
 	Topics.getTeasers = async function (topics, options) {
@@ -42,13 +43,17 @@ module.exports = function (Topics) {
 			}
 		});
 
-		const [allPostData, callerSettings] = await Promise.all([
-			posts.getPostsFields(teaserPids, ['pid', 'uid', 'timestamp', 'tid', 'content', 'sourceContent']),
+		const [allPostData, callerSettings, isAdmin, isTA, isProfessor] = await Promise.all([
+			posts.getPostsFields(teaserPids, ['pid', 'uid', 'timestamp', 'tid', 'content', 'sourceContent', 'targetRole']),
 			user.getSettings(uid),
+			user.isAdministrator(uid),
+			isUserInRole(uid, 'ta'),
+			isUserInRole(uid, 'professor'),
 		]);
+		const canSeeRoleRestricted = isAdmin || isTA || isProfessor;
 		let postData = allPostData.filter(post => post && post.pid);
 		postData = await handleBlocks(uid, postData);
-		postData = postData.filter(Boolean);
+		postData = postData.filter(post => post && (!post.targetRole || canSeeRoleRestricted));
 		const uids = _.uniq(postData.map(post => post.uid));
 		const sortNewToOld = callerSettings.topicPostSort === 'newest_to_oldest';
 		const usersData = await user.getUsersFields(uids, ['uid', 'username', 'userslug', 'picture']);

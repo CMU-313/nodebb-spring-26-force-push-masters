@@ -100,10 +100,18 @@ async function assignRoleToUser(uid, role) {
 	await groups.join(groupName, uid);
 }
 
+async function isUserInRole(uid, role) {
+	const normalized = normalizeRole(role); 
+	const groupName = ROLE_DEFS[normalized].group;
+	if (!groupName) return false;
+	return await groups.isMember(uid, groupName);
+}
+
 module.exports = {
 	ROLE_DEFAULT,
 	ROLE_DEFS,
 	normalizeRole,
 	requiresApproval,
 	assignRoleToUser,
+	isUserInRole,
 };

@@ -29,7 +29,6 @@ module.exports = function (Posts) {
 
 		const pid = data.pid || await db.incrObjectField('global', 'nextPid');
 		let postData = { pid, uid, tid, content, sourceContent, timestamp };
-
 		if (data.toPid) {
 			postData.toPid = data.toPid;
 		}
@@ -38,6 +37,9 @@ module.exports = function (Posts) {
 		}
 		if (data.handle && !parseInt(uid, 10)) {
 			postData.handle = data.handle;
+		}
+		if (data.targetRole) {
+			postData.targetRole = data.targetRole;
 		}
 		if (_activitypub) {
 			if (_activitypub.url) {
