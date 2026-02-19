@@ -127,15 +127,18 @@ module.exports = function (Topics) {
 		}
 
 		// Check whether caller is an admin/mod for this topic's category
-		const isAdminOrMod = await privileges.categories.isAdminOrMod(topicData.cid, uid);
-
+		//const isAdminOrMod = await privileges.categories.isAdminOrMod(topicData.cid, uid);
+		
+		//SPRINT 1: CHANGED from admin/mod to canResolve, so multiple groups
+		//that are able to resolve are checked through the categories function
+		const canResolve = await privileges.categories.canResolve(topicData.cid, uid);
 		// permission rules (open to later change based on needs): 
 		// only admin can resolve topics admin or topic author can unresolve
 		if (resolve) {
-			if (!isAdminOrMod) {
+			if (!canResolve) {
 				throw new Error('[[error:no-privileges]]');
 			}
-		} else if (!isAdminOrMod && uid !== topicData.uid) {
+		} else if (!canResolve && uid !== topicData.uid) {
 			throw new Error('[[error:no-privileges]]');
 		}
 		// Persist resolved state in DB
