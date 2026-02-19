@@ -122,6 +122,7 @@ get:
                         type: boolean
                       topics:delete:
                         type: boolean
+                    
                       posts:edit:
                         type: boolean
                       posts:history:
