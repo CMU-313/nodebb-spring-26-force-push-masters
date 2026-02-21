@@ -62,6 +62,7 @@ privsTopics.get = async function (tid, uid) {
 		read: privData.read || isAdministrator,
 		purge: (privData.purge && (isOwner || isModerator)) || isAdministrator,
 
+		canResolve: isAdministrator || isModerator || isTA || isProfessor,
 		view_thread_tools: editable || deletable || hasTools || isOwner,
 		editable: editable,
 		deletable: deletable,
