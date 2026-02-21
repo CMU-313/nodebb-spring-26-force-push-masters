@@ -143,6 +143,8 @@ get:
                         type: boolean
                       editable:
                         type: boolean
+                      canResolve:
+                        type: boolean
                       deletable:
                         type: boolean
                       view_deleted:
