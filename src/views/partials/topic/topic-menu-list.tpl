@@ -6,14 +6,16 @@
 <li {{{ if !locked }}}hidden{{{ end }}}>
 	<a component="topic/unlock" href="#" class="dropdown-item rounded-1 d-flex align-items-center gap-2 {{{ if !locked }}}hidden{{{ end }}}" role="menuitem"><i class="fa fa-fw fa-unlock text-secondary"></i> [[topic:thread-tools.unlock]]</a>
 </li>
+<!-- tried to change the check from isAdminorMod to canResolve -->
 
-<li {{{ if (resolved || !privileges.isAdminOrMod) }}}hidden{{{ end }}}>
-	<a component="topic/resolve" href="#" class="dropdown-item rounded-1 d-flex align-items-center gap-2 {{{ if (resolved || !privileges.isAdminOrMod) }}}hidden{{{ end }}}" role="menuitem"><i class="fa fa-fw fa-check-circle text-secondary"></i> [[topic:thread-tools.resolve]]</a>
+<li {{{ if (resolved || !privileges.canResolve) }}}hidden{{{ end }}}>
+	<a component="topic/resolve" href="#" class="dropdown-item rounded-1 d-flex align-items-center gap-2 {{{ if (resolved || !privileges.canResolve) }}}hidden{{{ end }}}" role="menuitem"><i class="fa fa-fw fa-check-circle text-secondary"></i> [[topic:thread-tools.resolve]]</a>
 </li>
 
-<li {{{ if (!resolved || (!privileges.isAdminOrMod && !isOwner)) }}}hidden{{{ end }}}>
-	<a component="topic/unresolve" href="#" class="dropdown-item rounded-1 d-flex align-items-center gap-2 {{{ if (!resolved || (!privileges.isAdminOrMod && !isOwner)) }}}hidden{{{ end }}}" role="menuitem"><i class="fa fa-fw fa-question-circle text-secondary"></i> [[topic:thread-tools.unresolve]]</a>
+<li {{{ if (!resolved || (!privileges.canResolve && !isOwner)) }}}hidden{{{ end }}}>
+	<a component="topic/unresolve" href="#" class="dropdown-item rounded-1 d-flex align-items-center gap-2 {{{ if (!resolved || (!privileges.canResolve && !isOwner)) }}}hidden{{{ end }}}" role="menuitem"><i class="fa fa-fw fa-question-circle text-secondary"></i> [[topic:thread-tools.unresolve]]</a>
 </li>
+
 
 <li {{{ if pinned }}}hidden{{{ end }}}>
 	<a component="topic/pin" href="#" class="dropdown-item rounded-1 d-flex align-items-center gap-2 {{{ if pinned }}}hidden{{{ end }}}" role="menuitem"><i class="fa fa-fw fa-thumb-tack text-secondary"></i> [[topic:thread-tools.pin]]</a>

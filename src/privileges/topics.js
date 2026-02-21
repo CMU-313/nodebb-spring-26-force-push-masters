@@ -24,9 +24,11 @@ privsTopics.get = async function (tid, uid) {
 		'posts:delete', 'posts:view_deleted', 'read', 'purge',
 	];
 	const topicData = await topics.getTopicFields(tid, ['cid', 'uid', 'locked', 'deleted', 'scheduled']);
-	const [userPrivileges, isAdministrator, isModerator, disabled, topicTools] = await Promise.all([
+	const [userPrivileges, isAdministrator, isTA, isProfessor, isModerator, disabled, topicTools] = await Promise.all([
 		helpers.isAllowedTo(privs, uid, topicData.cid),
 		user.isAdministrator(uid),
+		user.isTA(uid),
+		user.isProfessor(uid),
 		user.isModerator(uid, topicData.cid),
 		categories.getCategoryField(topicData.cid, 'disabled'),
 		plugins.hooks.fire('filter:topic.thread_tools', {
@@ -39,7 +41,8 @@ privsTopics.get = async function (tid, uid) {
 	const topicUid = parseInt(topicData.uid, 10);
 	const isOwner = uid > 0 && topicUid > 0 && uid === topicUid;
 	const isAdminOrMod = isAdministrator || isModerator;
-	const editable = isAdminOrMod;
+	const editable = isAdminOrMod || isTA || isProfessor;
+
 	const deletable = (privData['topics:delete'] && (isOwner || isModerator)) || isAdministrator;
 	const mayReply = privsTopics.canViewDeletedScheduled(topicData, {}, false, privData['topics:schedule']);
 	const hasTools = topicTools.tools.length > 0;
@@ -49,7 +52,7 @@ privsTopics.get = async function (tid, uid) {
 		'topics:read': privData['topics:read'] || isAdministrator,
 		'topics:schedule': privData['topics:schedule'] || isAdministrator,
 		'topics:tag': privData['topics:tag'] || isAdministrator,
-		'topics:delete': (privData['topics:delete'] && (isOwner || isModerator)) || isAdministrator,
+		'topics:delete': (privData['topics:delete'] && (isOwner || isModerator)) || isAdministrator || isTA || isProfessor,
 		'posts:edit': (privData['posts:edit'] && (!topicData.locked || isModerator)) || isAdministrator,
 		'posts:history': privData['posts:history'] || isAdministrator,
 		'posts:upvote': privData['posts:upvote'] || isAdministrator,
@@ -59,6 +62,7 @@ privsTopics.get = async function (tid, uid) {
 		read: privData.read || isAdministrator,
 		purge: (privData.purge && (isOwner || isModerator)) || isAdministrator,
 
+		canResolve: isAdministrator || isModerator || isTA || isProfessor,
 		view_thread_tools: editable || deletable || hasTools || isOwner,
 		editable: editable,
 		deletable: deletable,
@@ -171,6 +175,31 @@ privsTopics.canDelete = async function (tid, uid) {
 	const { deleterUid } = topicData;
 	return allowedTo[0] && ((isOwner && (deleterUid === 0 || deleterUid === topicData.uid)) || isModerator);
 };
+
+
+//SPRINT 1: canResolve checks if user can resolve said topic. 
+//ideally this should be the functionality needed compared to what was put
+//in categories.
+privsTopics.canResolve = async function (tid, uid) {
+	const topicData = await topics.getTopicFields(tid, ['uid', 'cid', 'postcount', 'resolverUid']);
+	const allowedTo = await helpers.isAllowedTo('topics:resolve', uid, [topicData.cid]);
+
+	if (user.isAdministrator(uid)) {
+		return true;
+	}
+	else if (user.isTA(uid)) {
+		return true;
+	}
+	else if (topics.isOwner(tid, uid)) {
+		return true;
+	}
+	
+	return user.isModerator(uid, topicData.cid) && allowedTo[0];
+
+	// return allowedTo[0] && ((isOwner && (topicData.resolverUid === 0 || 
+	// topicData.resolverUid === topicData.uid)) || isModerator);
+};
+
 
 privsTopics.canEdit = async function (tid, uid) {
 	return await privsTopics.isOwnerOrAdminOrMod(tid, uid);

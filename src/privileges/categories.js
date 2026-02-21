@@ -129,6 +129,20 @@ privsCategories.isAdminOrMod = async function (cid, uid) {
 	return isAdmin || isMod;
 };
 
+// SPRINT 1: canResolve used to check if user can resolve said category.
+privsCategories.canResolve = async function (cid, uid) {
+	if (parseInt(uid, 10) <= 0) {
+		return false;
+	}
+	const [isAdmin, isMod, isTA, isProfessor] = await Promise.all([
+		user.isAdministrator(uid),
+		user.isModerator(uid, cid),
+		user.isTA(uid),
+		user.isProfessor(uid),
+	]);
+	return isAdmin || isMod || isTA || isProfessor;
+};
+
 privsCategories.isUserAllowedTo = async function (privilege, cid, uid) {
 	if ((Array.isArray(privilege) && !privilege.length) || (Array.isArray(cid) && !cid.length)) {
 		return [];

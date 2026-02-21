@@ -14,7 +14,18 @@ const privsUsers = module.exports;
 privsUsers.isAdministrator = async function (uid) {
 	return await isGroupMember(uid, 'administrators');
 };
+//SPRINT 1: is student, ta, and professor to check if they're part of the group
+privsUsers.isStudent = async function (uid) {
+	return await isGroupMember(uid, 'Students');
+};
 
+privsUsers.isTA = async function (uid) {
+	return await isGroupMember(uid, 'TAs');
+};
+
+privsUsers.isProfessor = async function (uid) {
+	return await isGroupMember(uid, 'Professors');
+};
 privsUsers.isGlobalModerator = async function (uid) {
 	return await isGroupMember(uid, 'Global Moderators');
 };
