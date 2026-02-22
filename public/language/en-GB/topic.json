@@ -220,6 +220,9 @@
 	"composer.thumb-file-label": "Or upload a file",
 	"composer.thumb-remove": "Clear fields",
 	"composer.drag-and-drop-images": "Drag and Drop Images Here",
+	"composer.post-to": "Post to",
+	"composer.post-to-all": "All Users",
+	"composer.post-to-instructors": "TAs and Professors only",
 
 	"more-users-and-guests": "%1 more user(s) and %2 guest(s)",
 	"more-users": "%1 more user(s)",
