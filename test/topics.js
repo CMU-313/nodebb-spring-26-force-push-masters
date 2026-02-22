@@ -668,6 +668,46 @@ describe('Topic\'s', () => {
 			assert.strictEqual(resolved, 0);
 		});
 
+		it('should reject resolve when caller is not admin or mod', async () => {
+			try {
+				await apiTopics.resolve({ uid: fooUid }, { tids: [newTopic.tid], cid: categoryObj.cid });
+				assert.fail('expected no-privileges error');
+			} catch (err) {
+				assert.strictEqual(err.message, '[[error:no-privileges]]');
+			}
+		});
+
+		it('should add tid to cid:X:tids:resolved when topic is resolved', async () => {
+			await apiTopics.resolve({ uid: adminUid }, { tids: [newTopic.tid], cid: categoryObj.cid });
+			const inSet = await db.isSortedSetMember(`cid:${categoryObj.cid}:tids:resolved`, newTopic.tid);
+			assert(inSet, 'resolved topic should be in cid:X:tids:resolved');
+			await apiTopics.unresolve({ uid: adminUid }, { tids: [newTopic.tid], cid: categoryObj.cid });
+		});
+
+		it('should return only resolved topics when category filter resolved=1', async () => {
+			await apiTopics.resolve({ uid: adminUid }, { tids: [newTopic.tid], cid: categoryObj.cid });
+			const otherTopic = await topics.post({
+				uid: adminUid,
+				title: 'Unresolved topic',
+				content: 'Content',
+				cid: categoryObj.cid,
+			});
+			const data = {
+				cid: categoryObj.cid,
+				uid: adminUid,
+				start: 0,
+				stop: 10,
+				sort: 'recently_replied',
+				resolved: '1',
+				category: categoryObj,
+			};
+			const tids = await categories.getTopicIds(data);
+			const tidSet = new Set(tids.map(t => String(t)));
+			assert(tidSet.has(String(newTopic.tid)), 'resolved topic should be in result');
+			assert(!tidSet.has(String(otherTopic.topicData.tid)), 'unresolved topic should not be in result');
+			await apiTopics.unresolve({ uid: adminUid }, { tids: [newTopic.tid], cid: categoryObj.cid });
+		});
+
 		it('should move all topics', (done) => {
 			socketTopics.moveAll({ uid: adminUid }, { cid: moveCid, currentCid: categoryObj.cid }, (err) => {
 				assert.ifError(err);
