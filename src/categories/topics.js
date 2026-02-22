@@ -10,6 +10,7 @@ const notifications = require('../notifications');
 const translator = require('../translator');
 const batch = require('../batch');
 const utils = require('../utils');
+const { isUserInRole } = require('../user/roles');
 
 module.exports = function (Categories) {
 	Categories.getCategoryTopics = async function (data) {
@@ -17,6 +18,15 @@ module.exports = function (Categories) {
 		const tids = await Categories.getTopicIds(results);
 		let topicsData = await topics.getTopicsByTids(tids, data.uid);
 		topicsData = await user.blocks.filter(data.uid, topicsData);
+
+		const [isTA, isProfessor, isAdminOrMod] = await Promise.all([
+			isUserInRole(data.uid, 'ta'),
+			isUserInRole(data.uid, 'professor'),
+			privileges.categories.isAdminOrMod(data.cid, data.uid),
+		]);
+		if (!isTA && !isProfessor && !isAdminOrMod) {
+			topicsData = topicsData.filter(t => !t.targetRole);
+		}
 
 		if (!topicsData.length) {
 			return { topics: [], uid: data.uid };
@@ -119,6 +129,10 @@ module.exports = function (Categories) {
 
 		if (data.resolved === '1' || data.resolved === 1 || data.resolved === true) {
 			set.add(`cid:${cid}:tids:resolved`);
+		}
+
+		if (data.instructor === '1') {
+			set.add(`cid:${cid}:tids:instructor`);
 		}
 
 		if (parseInt(cid, 10) === -1 && uid > 0) {

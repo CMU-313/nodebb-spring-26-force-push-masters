@@ -16,6 +16,7 @@ const helpers = require('./helpers');
 const utils = require('../utils');
 const translator = require('../translator');
 const analytics = require('../analytics');
+const { isUserInRole } = require('../user/roles');
 
 const categoryController = module.exports;
 
@@ -103,6 +104,7 @@ categoryController.get = async function (req, res, next) {
 		tag: req.query.tag,
 		targetUid: targetUid,
 		resolved: req.query.resolved,
+		instructor: req.query.instructor,
 	});
 	if (!categoryData) {
 		return next();
@@ -145,6 +147,15 @@ categoryController.get = async function (req, res, next) {
 	categoryData.resolvedFilter = req.query.resolved === '1';
 	categoryData.resolvedFilterUrlAll = helpers.buildQueryString(req.query, 'resolved', '');
 	categoryData.resolvedFilterUrlResolved = helpers.buildQueryString(req.query, 'resolved', '1');
+
+	const [isTA, isProfessor] = await Promise.all([
+		isUserInRole(req.uid, 'ta'),
+		isUserInRole(req.uid, 'professor'),
+	]);
+	categoryData.showInstructorFilter = userPrivileges.isAdminOrMod || isTA || isProfessor;
+	categoryData.instructorFilter = req.query.instructor === '1';
+	categoryData.instructorFilterUrlAll = helpers.buildQueryString(req.query, 'instructor', '');
+	categoryData.instructorFilterUrlInstructor = helpers.buildQueryString(req.query, 'instructor', '1');
 	categoryData.selectCategoryLabel = '[[category:subcategories]]';
 	categoryData.description = translator.escape(categoryData.description);
 	categoryData.privileges = userPrivileges;
