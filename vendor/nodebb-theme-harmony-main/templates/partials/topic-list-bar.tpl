@@ -8,6 +8,7 @@
 				<!-- IMPORT partials/category/sort.tpl -->
 				{{{ if template.category }}}
 				<!-- IMPORT partials/category/resolved-filter.tpl -->
+				<!-- IMPORT partials/category/instructor-filter.tpl -->
 				{{{ end }}}
 				{{{ end }}}
 				{{{ if (template.popular || template.top)}}}
