@@ -48,6 +48,10 @@
 						<i class="fa fa-check-circle"></i>
 						<span>[[topic:resolved]]</span>
 					</span>
+					<span component="topic/instructor-only" class="badge border border-warning text-warning {{{ if !./targetRole }}}hidden{{{ end }}}">
+						<i class="fa fa-graduation-cap"></i>
+						<span>[[topic:instructor-only]]</span>
+					</span>
 					<span component="topic/moved" class="badge border border-gray-300 text-body {{{ if (!./oldCid || (./oldCid == "-1")) }}}hidden{{{ end }}}">
 						<i class="fa fa-arrow-circle-right"></i>
 						<span>[[topic:moved]]</span>

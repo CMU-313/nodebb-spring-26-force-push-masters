@@ -37,7 +37,7 @@
 				</h1>
 
 				<div class="topic-info d-flex gap-2 align-items-center flex-wrap {{{ if config.theme.centerHeaderElements }}}justify-content-center{{{ end }}}">
-					<span component="topic/labels" class="d-flex gap-2 {{{ if (!scheduled && (!pinned && (!locked && (!resolved && (!icons.length && (!oldCid || (oldCid == "-1"))))))) }}}hidden{{{ end }}}">
+					<span component="topic/labels" class="d-flex gap-2 {{{ if (!scheduled && (!pinned && (!locked && (!resolved && (!targetRole && (!icons.length && (!oldCid || (oldCid == "-1")))))))) }}}hidden{{{ end }}}">
 						<span component="topic/scheduled" class="badge badge border border-gray-300 text-body {{{ if !scheduled }}}hidden{{{ end }}}">
 							<i class="fa fa-clock-o"></i> [[topic:scheduled]]
 						</span>
@@ -49,6 +49,9 @@
 						</span>
 						<span component="topic/resolved-badge" class="badge badge border border-gray-300 text-body {{{ if !resolved }}}hidden{{{ end }}}">
 							<i class="fa fa-check-circle"></i> [[topic:resolved]]
+						</span>
+						<span component="topic/instructor-only-badge" class="badge badge border border-warning text-warning {{{ if !targetRole }}}hidden{{{ end }}}">
+							<i class="fa fa-graduation-cap"></i> [[topic:instructor-only]]
 						</span>
 						<a component="topic/moved" href="{config.relative_path}/category/{oldCid}" class="badge badge border border-gray-300 text-body text-decoration-none {{{ if (!oldCid || (oldCid == "-1")) }}}hidden{{{ end }}}">
 							<i class="fa fa-arrow-circle-right"></i> {{{ if privileges.isAdminOrMod }}}[[topic:moved-from, {oldCategory.name}]]{{{ else }}}[[topic:moved]]{{{ end }}}
