@@ -93,6 +93,18 @@ describe('Post Visibility by Role', () => {
 			const postObj = await posts.getPostData(postData.pid);
 			assert.strictEqual(postObj.targetRole, 'ta');
 		});
+
+		it('should persist targetRole on first post when creating topic via API', async () => {
+			const caller = { uid: professorUid, ip: '127.0.0.1' };
+			const topicData = await apiTopics.create(caller, {
+				cid: categoryObj.cid,
+				title: 'Instructor-only topic',
+				content: 'First post for TAs and Professors only',
+				targetRole: 'ta',
+			});
+			const mainPost = await posts.getPostData(topicData.mainPid);
+			assert.strictEqual(mainPost.targetRole, 'ta', 'topic create should persist targetRole on first post');
+		});
 	});
 
 	describe('topic page filtering', () => {
