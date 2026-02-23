@@ -6,6 +6,7 @@ const privileges = require('../privileges');
 const plugins = require('../plugins');
 const groups = require('../groups');
 const activitypub = require('../activitypub');
+const { isUserInRole } = require('./roles');
 
 module.exports = function (User) {
 	User.isReadyToPost = async function (uid, cid) {
@@ -45,6 +46,11 @@ module.exports = function (User) {
 		}
 
 		if (isAdminOrMod) {
+			return;
+		}
+
+		const isRoleMember = await Promise.all(['student', 'ta', 'professor'].map(r => isUserInRole(uid, r))).then(rs => rs.some(Boolean));
+		if (isRoleMember) {
 			return;
 		}
 
