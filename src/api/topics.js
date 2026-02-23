@@ -68,6 +68,17 @@ topicsAPI.create = async function (caller, data) {
 		}
 	}
 
+	if (payload.targetRole) {
+		const [isAdmin, isTA, isProfessor] = await Promise.all([
+			user.isAdministrator(caller.uid),
+			isUserInRole(caller.uid, 'ta'),
+			isUserInRole(caller.uid, 'professor'),
+		]);
+		if (!isAdmin && !isTA && !isProfessor) {
+			delete payload.targetRole;
+		}
+	}
+
 	await meta.blacklist.test(caller.ip);
 	const shouldQueue = await posts.shouldQueue(caller.uid, payload);
 	if (shouldQueue) {

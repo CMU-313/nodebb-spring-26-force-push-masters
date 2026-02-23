@@ -128,6 +128,18 @@ get:
                   resolvedFilterUrlResolved:
                     type: string
                     description: URL query string for showing only resolved topics
+                  showInstructorFilter:
+                    type: boolean
+                    description: Whether the instructor filter button is visible (true for TAs, professors, and admins)
+                  instructorFilter:
+                    type: boolean
+                    description: Whether the instructor filter is currently active
+                  instructorFilterUrlAll:
+                    type: string
+                    description: URL query string for showing all topics (instructor filter off)
+                  instructorFilterUrlInstructor:
+                    type: string
+                    description: URL query string for showing only instructor-addressed topics
                   handleFull:
                     type: string
                     description: |

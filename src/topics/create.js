@@ -134,6 +134,12 @@ module.exports = function (Topics) {
 		postData.ip = data.req ? data.req.ip : null;
 		postData.isMain = true;
 		postData = await posts.create(postData);
+		if (data.targetRole) {
+			await Promise.all([
+				Topics.setTopicField(tid, 'targetRole', data.targetRole),
+				db.sortedSetAdd(`cid:${data.cid}:tids:instructor`, data.timestamp || Date.now(), tid),
+			]);
+		}
 		postData = await onNewPost(postData, data);
 
 		const [settings, topics] = await Promise.all([
@@ -195,6 +201,11 @@ module.exports = function (Topics) {
 		await canReply(data, topicData);
 
 		data.cid = topicData.cid;
+
+		// Replies inherit the topic's targetRole automatically
+		if (topicData.targetRole) {
+			data.targetRole = topicData.targetRole;
+		}
 
 		await guestHandleValid(data);
 		data.content = String(data.content || '').trimEnd();
