@@ -202,6 +202,11 @@ module.exports = function (Topics) {
 
 		data.cid = topicData.cid;
 
+		// Replies inherit the topic's targetRole automatically
+		if (topicData.targetRole) {
+			data.targetRole = topicData.targetRole;
+		}
+
 		await guestHandleValid(data);
 		data.content = String(data.content || '').trimEnd();
 

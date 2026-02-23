@@ -37,19 +37,6 @@ define('quickreply', [
 			}
 		});
 
-		// Inject "Instructors only" dropdown for TAs and Professors
-		if (ajaxify.data.isInstructor) {
-			const buttonRow = components.get('topic/quickreply/button').parent();
-			if (!buttonRow.find('[component="topic/quickreply/target-role"]').length) {
-				buttonRow.prepend(
-					'<select component="topic/quickreply/target-role" class="form-select form-select-sm" style="width: auto;">' +
-					'<option value="">Everyone</option>' +
-					'<option value="ta">Instructors only</option>' +
-					'</select>'
-				);
-			}
-		}
-
 		uploadHelpers.init({
 			uploadBtnEl: $('[component="topic/quickreply/upload/button"]'),
 			dragDropAreaEl: $('[component="topic/quickreply/container"] .quickreply-message'),
@@ -74,12 +61,10 @@ define('quickreply', [
 			}
 
 			const replyMsg = element.val();
-			const targetRoleEl = $('[component="topic/quickreply/target-role"]');
 			const replyData = {
 				tid: ajaxify.data.tid,
 				handle: undefined,
 				content: replyMsg,
-				targetRole: targetRoleEl.length ? targetRoleEl.val() || undefined : undefined,
 			};
 			const replyLen = replyMsg.length;
 			if (replyLen < parseInt(config.minimumPostLength, 10)) {
