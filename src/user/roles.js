@@ -94,7 +94,7 @@ async function ensureAnnouncementPrivileges() {
 		return;
 	}
 
-	const cid = announcements.cid;
+	const { cid } = announcements;
 	const postPrivileges = ['groups:topics:create', 'groups:topics:reply'];
 
 	// Remove create/reply from registered-users, Students, and TAs on Announcements

@@ -266,11 +266,8 @@ module.exports = function (Posts) {
 			reply: 'topics:reply',
 		};
 
-		const [canPost] = await Promise.all([
-			privileges.categories.can(typeToPrivilege[type], cid, data.uid),
-			user.isReadyToQueue(data.uid, cid),
-		]);
-		if (!canPost) {
+		const canPostPrivilege = await privileges.categories.can(typeToPrivilege[type], cid, data.uid);
+		if (!canPostPrivilege) {
 			throw new Error('[[error:no-privileges]]');
 		}
 
@@ -281,6 +278,8 @@ module.exports = function (Posts) {
 				await topics.validateTags(data.tags, cid, data.uid);
 			}
 		}
+
+		await user.isReadyToQueue(data.uid, cid);
 	}
 
 	Posts.removeFromQueue = async function (id) {
