@@ -122,6 +122,7 @@ get:
                         type: boolean
                       topics:delete:
                         type: boolean
+                    
                       posts:edit:
                         type: boolean
                       posts:history:
@@ -141,6 +142,8 @@ get:
                       view_thread_tools:
                         type: boolean
                       editable:
+                        type: boolean
+                      canResolve:
                         type: boolean
                       deletable:
                         type: boolean

@@ -22,6 +22,7 @@ const ROLE_DEFS = {
 	},
 };
 
+//SPRINT 1: added in privileges of resolve for both TA and Professor
 const ROLE_PRIVILEGES = {
 	ta: {
 		category: [
@@ -30,6 +31,7 @@ const ROLE_PRIVILEGES = {
 			'groups:posts:view_deleted',
 			'groups:posts:history',
 			'groups:topics:delete',
+			'groups:topics:resolve',
 		],
 	},
 	professor: {
@@ -41,6 +43,7 @@ const ROLE_PRIVILEGES = {
 			'groups:topics:delete',
 			'groups:topics:schedule',
 			'groups:purge',
+			'groups:topics:resolve',
 		],
 	},
 };
