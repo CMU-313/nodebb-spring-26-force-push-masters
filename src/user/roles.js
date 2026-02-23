@@ -2,6 +2,9 @@
 
 const groups = require('../groups');
 const privileges = require('../privileges');
+const categories = require('../categories');
+
+const ANNOUNCEMENT_CATEGORY_NAME = 'Announcements';
 
 const ROLE_DEFAULT = 'student';
 const ROLE_DEFS = {
@@ -83,6 +86,25 @@ async function ensureRoleGroups() {
 	}
 }
 
+async function ensureAnnouncementPrivileges() {
+	const allCids = await categories.getAllCidsFromSet('categories:cid');
+	const categoryData = await categories.getCategoriesFields(allCids, ['cid', 'name']);
+	const announcements = categoryData.find(c => c.name === ANNOUNCEMENT_CATEGORY_NAME);
+	if (!announcements) {
+		return;
+	}
+
+	const { cid } = announcements;
+	const postPrivileges = ['groups:topics:create', 'groups:topics:reply'];
+
+	// Remove create/reply from registered-users, Students, and TAs on Announcements
+	await privileges.categories.rescind(postPrivileges, cid, ['registered-users']);
+	await privileges.categories.rescind(postPrivileges, cid, ['Students']);
+	await privileges.categories.rescind(postPrivileges, cid, ['TAs']);
+	// Give Professors create/reply on Announcements
+	await privileges.categories.give(postPrivileges, cid, ['Professors']);
+}
+
 async function ensureRolePrivileges() {
 	const ta = ROLE_DEFS.ta.group;
 	const professor = ROLE_DEFS.professor.group;
@@ -93,6 +115,7 @@ async function ensureRolePrivileges() {
 	if (ROLE_PRIVILEGES.professor?.category?.length) {
 		await privileges.categories.give(ROLE_PRIVILEGES.professor.category, -1, [professor]);
 	}
+	await ensureAnnouncementPrivileges();
 }
 
 async function assignRoleToUser(uid, role) {
@@ -117,4 +140,5 @@ module.exports = {
 	requiresApproval,
 	assignRoleToUser,
 	isUserInRole,
+	ensureAnnouncementPrivileges,
 };

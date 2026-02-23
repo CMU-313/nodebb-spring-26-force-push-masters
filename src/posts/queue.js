@@ -16,6 +16,7 @@ const plugins = require('../plugins');
 const utils = require('../utils');
 const cache = require('../cache');
 const socketHelpers = require('../socket.io/helpers');
+const { isUserInRole } = require('../user/roles');
 
 module.exports = function (Posts) {
 	Posts.getQueuedPosts = async (filter = {}, options = {}) => {
@@ -114,15 +115,17 @@ module.exports = function (Posts) {
 	Posts.shouldQueue = async function (uid, data) {
 		let shouldQueue = meta.config.postQueue;
 		if (shouldQueue) {
-			const [userData, isPrivileged, isMemberOfExempt, categoryQueueEnabled] = await Promise.all([
+			const [userData, isPrivileged, isMemberOfExempt, categoryQueueEnabled, isRoleMember] = await Promise.all([
 				user.getUserFields(uid, ['uid', 'reputation', 'postcount']),
 				user.isPrivileged(uid),
 				groups.isMemberOfAny(uid, meta.config.groupsExemptFromPostQueue),
 				isCategoryQueueEnabled(data),
+				Promise.all(['student', 'ta', 'professor'].map(r => isUserInRole(uid, r))).then(rs => rs.some(Boolean)),
 			]);
 			shouldQueue = categoryQueueEnabled &&
 				!isPrivileged &&
 				!isMemberOfExempt &&
+				!isRoleMember &&
 				(
 					!userData.uid ||
 					userData.reputation < meta.config.postQueueReputationThreshold ||
@@ -263,6 +266,11 @@ module.exports = function (Posts) {
 			reply: 'topics:reply',
 		};
 
+		const canPostPrivilege = await privileges.categories.can(typeToPrivilege[type], cid, data.uid);
+		if (!canPostPrivilege) {
+			throw new Error('[[error:no-privileges]]');
+		}
+
 		topics.checkContent(data.content);
 		if (type === 'topic') {
 			topics.checkTitle(data.title);
@@ -271,13 +279,7 @@ module.exports = function (Posts) {
 			}
 		}
 
-		const [canPost] = await Promise.all([
-			privileges.categories.can(typeToPrivilege[type], cid, data.uid),
-			user.isReadyToQueue(data.uid, cid),
-		]);
-		if (!canPost) {
-			throw new Error('[[error:no-privileges]]');
-		}
+		await user.isReadyToQueue(data.uid, cid);
 	}
 
 	Posts.removeFromQueue = async function (id) {

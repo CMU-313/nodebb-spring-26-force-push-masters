@@ -18,6 +18,9 @@ start.start = async function () {
 		const meta = require('./meta');
 		await meta.configs.init();
 
+		const { ensureAnnouncementPrivileges } = require('./user/roles');
+		await ensureAnnouncementPrivileges();
+
 		if (nconf.get('runJobs')) {
 			await runUpgrades();
 		}

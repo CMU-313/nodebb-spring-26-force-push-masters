@@ -321,9 +321,11 @@ User.addRegistrationHooks = function (callback) {
 	plugins.hooks.register('core', {
 		hook: 'action:user.create',
 		method: async ({ user, data }) => {
-			const role = data && data.role ? roles.normalizeRole(data.role) : roles.ROLE_DEFAULT;
-			await roles.assignRoleToUser(user.uid, role);
-			await User.setUserField(user.uid, 'role', role);
+			if (data && data.role) {
+				const role = roles.normalizeRole(data.role);
+				await roles.assignRoleToUser(user.uid, role);
+				await User.setUserField(user.uid, 'role', role);
+			}
 		},
 	});
 
