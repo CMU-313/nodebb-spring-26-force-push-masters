@@ -25,7 +25,7 @@ module.exports = function (Categories) {
 			privileges.categories.isAdminOrMod(data.cid, data.uid),
 		]);
 		if (!isTA && !isProfessor && !isAdminOrMod) {
-			topicsData = topicsData.filter(t => !t.targetRole);
+			topicsData = topicsData.filter(t => !t.targetRole || String(t.uid) === String(data.uid));
 		}
 
 		if (!topicsData.length) {
