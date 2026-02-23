@@ -4,8 +4,7 @@
 
 This forum supports three role-based features for managing topic visibility and status:
 
-1. **Instructor-only topics** — TAs and Professors can create topics visible only to instructors (TAs, Professors, Admins), hidden from students entirely
-2. **Instructor-only badge & filter** — Instructor-only topics are marked with a yellow badge; TAs, Professors, and Admins see a filter button to show only instructor-only topics
+1. **Instructor-only topics** — User can create topics visible only to instructors (TAs, Professors, Admins), hidden from students entirely and Instructors see a filter button to show only instructor-only topics
 3. **Resolve/Unresolve** — Admins and moderators can mark topics as resolved to indicate a question has been addressed
 
 **Who can see what:**
@@ -15,7 +14,6 @@ This forum supports three role-based features for managing topic visibility and 
 | Normal topic | Yes | Yes | Yes | Yes |
 | Instructor-only topic | No | Yes | Yes | Yes |
 | Resolved badge | Yes | Yes | Yes | Yes |
-| Instructor-only badge & filter | No | Yes | Yes | Yes |
 
 ## How to Use
 
@@ -46,7 +44,7 @@ Instructor-only topics are hidden from students in all views:
 
 Admins and moderators can mark topics as "Resolved" to indicate a question or issue has been addressed.
 
-1. Log in as an **Admin** or **Moderator**
+1. Log in as an **Admin** or **Instructor**
 2. Open any topic
 3. Use the **"Mark Resolved"** option from the topic tools (or the resolve button in the sidebar)
 4. **Expected:** The topic shows a "Resolved" badge in the category listing and topic header
