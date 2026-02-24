@@ -14,6 +14,21 @@ define('quickreply', [
 	QuickReply.init = function () {
 		const element = components.get('topic/quickreply/text');
 		const qrDraftId = `qr:draft:tid:${ajaxify.data.tid}`;
+
+		if (ajaxify.data.isInstructor) {
+			const container = $('[component="topic/quickreply/container"] .quickreply-message');
+			if (container.length && !container.find('[component="quickreply/target-role"]').length) {
+				const dropdown = $(
+					'<div component="quickreply/target-role" class="d-flex align-items-center gap-1 mt-1">' +
+					'<label class="form-label mb-0 text-nowrap small">Post to:</label>' +
+					'<select class="form-select form-select-sm" style="width: auto;">' +
+					'<option value="">All Users</option>' +
+					'<option value="ta">Instructors only</option>' +
+					'</select></div>'
+				);
+				container.append(dropdown);
+			}
+		}
 		const data = {
 			element: element,
 			strategies: [],
@@ -61,10 +76,12 @@ define('quickreply', [
 			}
 
 			const replyMsg = element.val();
+			const targetRoleSelect = $('[component="quickreply/target-role"] select');
 			const replyData = {
 				tid: ajaxify.data.tid,
 				handle: undefined,
 				content: replyMsg,
+				targetRole: targetRoleSelect.length ? (targetRoleSelect.val() || undefined) : undefined,
 			};
 			const replyLen = replyMsg.length;
 			if (replyLen < parseInt(config.minimumPostLength, 10)) {
