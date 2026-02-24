@@ -30,7 +30,7 @@ define('forum/composerTargetRole', ['hooks'], function (hooks) {
 		});
 
 		hooks.on('filter:composer.submit', function (submitHookData) {
-			if (submitHookData.action !== 'topics.post') {
+			if (submitHookData.action !== 'topics.post' && submitHookData.action !== 'posts.reply') {
 				return;
 			}
 			const composerEl = submitHookData.composerEl;
