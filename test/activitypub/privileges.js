@@ -14,7 +14,7 @@ const meta = require('../../src/meta');
 const install = require('../../src/install');
 const utils = require('../../src/utils');
 const activitypub = require('../../src/activitypub');
-
+const groups = require('../../src/groups');
 const helpers = require('./helpers');
 
 describe.skip('Privilege logic for remote users/content (ActivityPub)', () => {
@@ -459,4 +459,57 @@ describe('Privilege masking', () => {
 			assert(!set['topics:create']);
 		});
 	});
+});
+
+
+//SPRINT 2: Added tests to check that TAs and Professors have resolve privileges
+describe('Resolve topic privileges for TAs and Professors', () => {
+	let cid;
+	let topic;
+	let taUid;
+	let profUid;
+	let student1Uid;
+	let student2Uid;
+	let adminUid;
+
+	before(async () => {
+		// Create category
+		({ cid } = await categories.create({ name: utils.generateUUID() }));
+
+		// Create users
+		taUid = await user.create({ username: utils.generateUUID().slice(0, 10) });
+		profUid = await user.create({ username: utils.generateUUID().slice(0, 10) });
+		student1Uid = await user.create({ username: utils.generateUUID().slice(0, 10) });
+		adminUid = await user.create({ username: utils.generateUUID().slice(0, 10) });
+		student2Uid = await user.create({ username: utils.generateUUID().slice(0, 10) });
+
+		await groups.join('ta', taUid);
+		await groups.join('professor', profUid);
+		await groups.join('administrators', adminUid);
+		// Create topic
+		const result = await topics.post({
+			cid,
+			uid: student2Uid,
+			title: utils.generateUUID(),
+			content: utils.generateUUID(),
+		});
+		topic = result.topicData;
+	});
+
+	it('TA should be able to resolve topic', async () => {
+		const canResolve = await privileges.topics.canResolve(topic.tid, taUid);
+		assert.strictEqual(canResolve, true);
+	});
+
+	it('Professor should be able to resolve topic', async () => {
+		const canResolve = await privileges.topics.canResolve(topic.tid, profUid);
+		assert.strictEqual(canResolve, true);
+	});
+
+
+	it('Admin should be able to resolve topic', async () => {
+		const canResolve = await privileges.topics.canResolve(topic.tid, adminUid);
+		assert.strictEqual(canResolve, true);
+	});
+
 });
