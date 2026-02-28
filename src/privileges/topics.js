@@ -182,7 +182,7 @@ privsTopics.canDelete = async function (tid, uid) {
 //in categories.
 privsTopics.canResolve = async function (tid, uid) {
 	const topicData = await topics.getTopicFields(tid, ['uid', 'cid', 'postcount', 'resolverUid']);
-	const allowedTo = await helpers.isAllowedTo('topics:resolve', uid, [topicData.cid]);
+	//const allowedTo = await helpers.isAllowedTo('topics:resolve', uid, [topicData.cid]);
 
 	if (user.isAdministrator(uid)) {
 		return true;
@@ -193,8 +193,14 @@ privsTopics.canResolve = async function (tid, uid) {
 	else if (topics.isOwner(tid, uid)) {
 		return true;
 	}
+	else if (user.isModerator(uid, topicData.cid)) {
+		return true;
+	}
 	
-	return user.isModerator(uid, topicData.cid) && allowedTo[0];
+	return false;
+	
+	
+	//return user.isModerator(uid, topicData.cid) && allowedTo[0];
 
 	// return allowedTo[0] && ((isOwner && (topicData.resolverUid === 0 || 
 	// topicData.resolverUid === topicData.uid)) || isModerator);

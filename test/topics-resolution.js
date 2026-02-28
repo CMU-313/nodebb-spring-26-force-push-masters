@@ -33,7 +33,7 @@ describe('Topic resolution', () => {
 		newTopicTid = result.topicData.tid;
 	});
 
-	it('should reject resolve when caller is not admin or mod', async () => {
+	it('should reject resolve when caller is not admin, mod, TA, or prof', async () => {
 		try {
 			await apiTopics.resolve({ uid: fooUid }, { tids: [newTopicTid], cid: categoryObj.cid });
 			assert.fail('expected no-privileges error');
