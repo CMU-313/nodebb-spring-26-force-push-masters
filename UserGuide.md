@@ -187,7 +187,7 @@ When the post queue is enabled globally or per-category, students, TAs, and prof
 
 ### Location
 
-Automated tests are in [`test/role-visibility.js`](test/role-visibility.js), [`test/instructor-topics.js`](test/instructor-topics.js), [`test/topics-resolution.js`](test/topics-resolution.js), and [`test/role-permissions.js`](test/role-permissions.js).
+Automated tests are in [`test/role-visibility.js`](test/role-visibility.js), [`test/instructor-topics.js`](test/instructor-topics.js), [`test/topics-resolution.js`](test/topics-resolution.js), ['test/activitypub/privileges.js'], and [`test/role-permissions.js`](test/role-permissions.js).
 
 Run them with:
 ```bash
@@ -221,6 +221,14 @@ NODE_NO_WARNINGS=1 NODE_OPTIONS=--no-deprecation NODEBB_TEST_SILENT=1 npx mocha 
 |------|-----------------|
 | `should filter targetRole posts from students via privileges.posts.filter` | The privilege system's `filter()` method (used by search, recent topics, profiles) excludes restricted topics for students |
 | `should not filter targetRole posts from TAs via privileges.posts.filter` | The same `filter()` method includes restricted topics for TAs |
+
+#### Resolve Privileges — `test/activitypub/privileges.js` (2 tests)
+| Test | What It Verifies |
+|------|-----------------|
+| `TA should be able to resolve topic` | The canResolve function of a topic's privileges for TAs verifies whether TAs can resolve said topic. |
+| `Professor should be able to resolve topic` | The canResolve function of a topic's privileges for TAs verifies whether TAs can resolve said topic. |
+| `Admin should be able to resolve topic` | The canResolve function of a topic's privileges for TAs verifies whether TAs can resolve said topic. |
+
 
 #### Category Teaser Filtering — `test/role-visibility.js` (2 tests)
 
@@ -299,6 +307,9 @@ The tests cover **every code path** where restricted topics could leak to studen
 9. **Post delay bypass** (`src/user/index.js`) — Tests verify that authenticated users are not blocked by post delay restrictions.
 
 10. **Category-level posting permissions** (`src/categories/topics.js`, `src/privileges/categories.js`) — Tests in `role-permissions.js` verify that only professors can post in the Announcements category, while all roles can post in the General category. This includes both topic creation and reply permissions.
+    
+11. **Resolve privileges** (`src/privileges/topics.js`) — Tests in `privileges.js` verify that only professors and TAs can resolve topics.
+
 
 Together these tests ensure that:
 - An instructor-only topic cannot be seen by a student through **any** view in the application
