@@ -1,0 +1,20 @@
+# Semgrep ignore file for NodeBB
+# Excludes third-party and generated files from analysis
+
+# Dependencies
+node_modules/
+vendor/
+
+# Build output
+build/
+public/src/modules/
+public/src/admin/
+
+# Test files
+test/
+
+# Coverage
+coverage/
+
+# Logs
+logs/
