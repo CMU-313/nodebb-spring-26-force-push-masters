@@ -1,0 +1,2 @@
+# Python dependencies for static analysis tooling
+semgrep==1.155.0

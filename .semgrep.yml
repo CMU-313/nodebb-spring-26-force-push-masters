@@ -1,0 +1,31 @@
+# Semgrep configuration for NodeBB
+# Run with: semgrep --config=.semgrep.yml src/
+
+rules:
+  # Use Semgrep's recommended JavaScript security ruleset
+  - id: nodebb-no-eval
+    patterns:
+      - pattern: eval(...)
+    message: >
+      Avoid using eval() — it can lead to code injection vulnerabilities.
+    languages: [javascript]
+    severity: ERROR
+
+  - id: nodebb-no-console-log
+    pattern: console.log(...)
+    message: >
+      Avoid leaving console.log() calls in production code. Use a logger instead.
+    languages: [javascript]
+    severity: WARNING
+
+  - id: nodebb-no-hardcoded-secret
+    patterns:
+      - pattern: |
+          const $VAR = "...";
+      - metavariable-regex:
+          metavariable: $VAR
+          regex: (secret|password|apikey|api_key|token|passwd)
+    message: >
+      Possible hardcoded secret in variable '$VAR'. Use environment variables instead.
+    languages: [javascript]
+    severity: ERROR

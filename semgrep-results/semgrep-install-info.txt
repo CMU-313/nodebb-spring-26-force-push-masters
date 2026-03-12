@@ -1,0 +1,10 @@
+Name: semgrep
+Version: 1.155.0
+Summary: Lightweight static analysis for many languages. Find bug variants with patterns that look like source code.
+Home-page: https://semgrep.dev
+Author: 
+Author-email: "Semgrep Inc." <support@semgrep.com>
+License-Expression: LGPL-2.1-or-later
+Location: /home/node/.local/lib/python3.11/site-packages
+Requires: attrs, boltons, click, click-option-group, colorama, exceptiongroup, glom, jsonschema, mcp, opentelemetry-api, opentelemetry-exporter-otlp-proto-http, opentelemetry-instrumentation-requests, opentelemetry-instrumentation-threading, opentelemetry-sdk, packaging, peewee, pyjwt, requests, rich, ruamel.yaml, ruamel.yaml.clib, semantic-version, tomli, typing-extensions, urllib3, wcmatch
+Required-by: 

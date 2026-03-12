@@ -1,0 +1,311 @@
+                    
+                    
+┌──────────────────┐
+│ 86 Code Findings │
+└──────────────────┘
+                              
+    src/activitypub/helpers.js
+    ❯❱ nodebb-no-console-log
+          ❰❰ Blocking ❱❱
+          Avoid leaving console.log() calls in production code. Use a logger instead.
+                                                                                     
+           36┆ console.log(await method.apply(method, args));
+                    
+    src/cli/index.js
+    ❯❱ nodebb-no-console-log
+          ❰❰ Blocking ❱❱
+          Avoid leaving console.log() calls in production code. Use a logger instead.
+                                                                                     
+           46┆ console.log('Installing them now...\n');
+            ⋮┆----------------------------------------
+           63┆ console.log(`${chalk.green('OK')}\n`);
+            ⋮┆----------------------------------------
+          181┆ console.log('If you meant to pass in an initial config value, please try again.\n');
+            ⋮┆----------------------------------------
+          287┆ console.log(`\n${[
+          288┆    'When running particular upgrade scripts, options are ignored.',
+          289┆    'By default all options are enabled. Passing any options disables that default.',
+          290┆    '\nExamples:',
+          291┆    `  Only package and dependency updates: ${chalk.yellow('./nodebb upgrade -mi')}`,
+          292┆    `  Only database update: ${chalk.yellow('./nodebb upgrade -s')}`,
+          293┆ ].join('\n')}`);
+            ⋮┆----------------------------------------
+          316┆ console.log(chalk.green('OK'));
+            ⋮┆----------------------------------------
+          333┆ console.log(`error: unknown command '${command}'.`);
+                     
+    src/cli/manage.js
+    ❯❱ nodebb-no-console-log
+          ❰❰ Blocking ❱❱
+          Avoid leaving console.log() calls in production code. Use a logger instead.
+                                                                                     
+          138┆ console.log(chalk.bold(`\nDisplaying last ${count} administrative events...`));
+            ⋮┆----------------------------------------
+          140┆ console.log(`  * ${chalk.green(String(event.timestampISO))}                               
+               ${chalk.yellow(String(event.type))}${event.text ? ` ${event.text}` : ''} (uid: ${event.uid
+               ? event.uid : 0})`);                                                                      
+            ⋮┆----------------------------------------
+          146┆ console.log('');
+            ⋮┆----------------------------------------
+          148┆ console.log(`  version:  ${version}`);
+            ⋮┆----------------------------------------
+          150┆ console.log(`  Node ver: ${process.version}`);
+            ⋮┆----------------------------------------
+          153┆ console.log(`  git hash: ${hash}`);
+            ⋮┆----------------------------------------
+          155┆ console.log(`  database: ${nconf.get('database')}`);
+            ⋮┆----------------------------------------
+          162┆ console.log(`        version: ${info.redis_version}`);
+            ⋮┆----------------------------------------
+          163┆ console.log(`        disk sync:  ${info.rdb_last_bgsave_status}`);
+            ⋮┆----------------------------------------
+          167┆ console.log(`        version: ${info.version}`);
+            ⋮┆----------------------------------------
+          168┆ console.log(`        engine:  ${info.storageEngine}`);
+            ⋮┆----------------------------------------
+          171┆ console.log(`        version: ${info.version}`);
+            ⋮┆----------------------------------------
+          172┆ console.log(`        uptime:  ${info.uptime}`);
+            ⋮┆----------------------------------------
+          192┆ console.log('');
+            ⋮┆----------------------------------------
+          193┆ console.log(graph.toString());
+            ⋮┆----------------------------------------
+          194┆ console.log(`Pageviews, last 24h (min: ${min}  max: ${max})`);
+            ⋮┆----------------------------------------
+          202┆ console.log(`Maintenance mode turned ${turnOnMaintenance ? 'on' : 'off'}`);
+                              
+    src/cli/package-install.js
+    ❯❱ nodebb-no-console-log
+          ❰❰ Blocking ❱❱
+          Avoid leaving console.log() calls in production code. Use a logger instead.
+                                                                                     
+          134┆ console.log('Error installing dependencies!');
+            ⋮┆----------------------------------------
+          135┆ console.log(`message: ${e.message}`);
+            ⋮┆----------------------------------------
+          136┆ console.log(`stdout: ${e.stdout}`);
+            ⋮┆----------------------------------------
+          137┆ console.log(`stderr: ${e.stderr}`);
+                    
+    src/cli/reset.js
+    ❯❱ nodebb-no-console-log
+          ❰❰ Blocking ❱❱
+          Avoid leaving console.log() calls in production code. Use a logger instead.
+                                                                                     
+           60┆ console.log([
+           61┆    chalk.yellow('No arguments passed in, so nothing was reset.\n'),
+           62┆    `Use ./nodebb reset ${chalk.red('{-t|-p|-w|-s|-a}')}`,
+           63┆    '    -t\tthemes',
+           64┆    '    -p\tplugins',
+           65┆    '    -w\twidgets',
+           66┆    '    -s\tsettings',
+           67┆    '    -a\tall of the above',
+           68┆    '',
+           69┆    'Plugin and theme reset flags (-p & -t) can take a single argument',
+             [hid 3 additional lines, adjust with --max-lines-per-finding] 
+                      
+    src/cli/running.js
+    ❯❱ nodebb-no-console-log
+          ❰❰ Blocking ❱❱
+          Avoid leaving console.log() calls in production code. Use a logger instead.
+                                                                                     
+           42┆ console.log(`\n${[
+           43┆    chalk.bold('Starting NodeBB with logging output'),
+           44┆    chalk.red('Hit ') + chalk.bold('Ctrl-C ') + chalk.red('to exit'),
+           45┆    'The NodeBB process will continue to run in the background',
+           46┆    `Use "${chalk.yellow('./nodebb stop')}" to stop the NodeBB server`,
+           47┆ ].join('\n')}`);
+            ⋮┆----------------------------------------
+           49┆ console.log(`\n${[
+           50┆    chalk.bold('Starting NodeBB'),
+           51┆    `  "${chalk.yellow('./nodebb stop')}" to stop the NodeBB server`,
+           52┆    `  "${chalk.yellow('./nodebb log')}" to view server output`,
+           53┆    `  "${chalk.yellow('./nodebb help')}" for more commands\n`,
+           54┆ ].join('\n')}`);
+            ⋮┆----------------------------------------
+           76┆ console.log('Stopping NodeBB. Goodbye!');
+            ⋮┆----------------------------------------
+           78┆ console.log('NodeBB is already stopped.');
+            ⋮┆----------------------------------------
+           86┆ console.log(chalk.bold('\nRestarting NodeBB'));
+            ⋮┆----------------------------------------
+          100┆ console.log(`\n${[
+          101┆    chalk.bold('NodeBB Running ') + chalk.cyan(`(pid ${pid.toString()})`),
+          102┆    `\t"${chalk.yellow('./nodebb stop')}" to stop the NodeBB server`,
+          103┆    `\t"${chalk.yellow('./nodebb log')}" to view server output`,
+          104┆    `\t"${chalk.yellow('./nodebb restart')}" to restart NodeBB\n`,
+          105┆ ].join('\n')}`);
+            ⋮┆----------------------------------------
+          107┆ console.log(chalk.bold('\nNodeBB is not running'));
+            ⋮┆----------------------------------------
+          108┆ console.log(`\t"${chalk.yellow('./nodebb start')}" to launch the NodeBB server\n`);
+            ⋮┆----------------------------------------
+          114┆ console.log(`${chalk.red('\nHit ') + chalk.bold('Ctrl-C ') + chalk.red('to exit\n')}\n`);
+                    
+    src/cli/setup.js
+    ❯❱ nodebb-no-console-log
+          ❰❰ Blocking ❱❱
+          Avoid leaving console.log() calls in production code. Use a logger instead.
+                                                                                     
+           18┆ console.log(`\nWelcome to NodeBB v${pkg.version}!`);
+            ⋮┆----------------------------------------
+           19┆ console.log('\nThis looks like a new installation, so you\'ll have to answer a few
+               questions about your environment before we can proceed.');                        
+            ⋮┆----------------------------------------
+           20┆ console.log('Press enter to accept the default setting (shown in brackets).');
+            ⋮┆----------------------------------------
+           44┆ console.log(`\n${separator}\n`);
+            ⋮┆----------------------------------------
+           47┆ console.log('An administrative user was automatically created for you:');
+            ⋮┆----------------------------------------
+           48┆ console.log(`    Username: ${data.username}`);
+            ⋮┆----------------------------------------
+           49┆ console.log(`    Password: ${data.password}`);
+            ⋮┆----------------------------------------
+           50┆ console.log('');
+            ⋮┆----------------------------------------
+           52┆ console.log('NodeBB Setup Completed. Run "./nodebb start" to manually start your NodeBB
+               server.');                                                                             
+                              
+    src/cli/upgrade-plugins.js
+    ❯❱ nodebb-no-console-log
+          ❰❰ Blocking ❱❱
+          Avoid leaving console.log() calls in production code. Use a logger instead.
+                                                                                     
+          132┆ console.log(chalk.green('\nAll packages up-to-date!'));
+            ⋮┆----------------------------------------
+          149┆ console.log('\nUpgrading packages...');
+            ⋮┆----------------------------------------
+          154┆ console.log(`${chalk.yellow('Package upgrades skipped')}. Check for upgrades at any time by
+               running "${chalk.green('./nodebb upgrade -p')}".`);                                        
+            ⋮┆----------------------------------------
+          157┆ console.log(`${chalk.yellow('Warning')}: An unexpected error occured when attempting to
+               verify plugin upgradability`);                                                         
+                      
+    src/cli/upgrade.js
+    ❯❱ nodebb-no-console-log
+          ❰❰ Blocking ❱❱
+          Avoid leaving console.log() calls in production code. Use a logger instead.
+                                                                                     
+           64┆ console.log(`\n\n${spaces}${chalk.green.bold(message)}\n`);
+            ⋮┆----------------------------------------
+           87┆ console.log(chalk.cyan('\nUpdating NodeBB...'));
+                   
+    src/cli/user.js
+    ❯❱ nodebb-no-console-log
+          ❰❰ Blocking ❱❱
+          Avoid leaving console.log() calls in production code. Use a logger instead.
+                                                                                     
+          174┆ console.log(userData);
+                              
+    src/database/mongo/hash.js
+    ❯❱ nodebb-no-console-log
+          ❰❰ Blocking ❱❱
+          Avoid leaving console.log() calls in production code. Use a logger instead.
+                                                                                     
+           30┆ console.log(new Error('e11000').stack, key, data);
+            ⋮┆----------------------------------------
+           66┆ console.log(new Error('e11000').stack, data);
+            ⋮┆----------------------------------------
+          266┆ console.log(new Error('e11000').stack, key, field, value);
+                              
+    src/database/mongo/sets.js
+    ❯❱ nodebb-no-console-log
+          ❰❰ Blocking ❱❱
+          Avoid leaving console.log() calls in production code. Use a logger instead.
+                                                                                     
+           31┆ console.log(new Error('e11000').stack, key, value);
+            ⋮┆----------------------------------------
+           64┆ console.log(new Error('e11000').stack, keys, value);
+            ⋮┆----------------------------------------
+           89┆ console.log(new Error('e11000').stack, data);
+                                
+    src/database/mongo/sorted.js
+    ❯❱ nodebb-no-console-log
+          ❰❰ Blocking ❱❱
+          Avoid leaving console.log() calls in production code. Use a logger instead.
+                                                                                     
+          454┆ console.log(new Error('e11000').stack, key, increment, value);
+                                    
+    src/database/mongo/sorted/add.js
+    ❯❱ nodebb-no-console-log
+          ❰❰ Blocking ❱❱
+          Avoid leaving console.log() calls in production code. Use a logger instead.
+                                                                                     
+           23┆ console.log(new Error('e11000').stack, key, score, value);
+                  
+    src/install.js
+    ❯❱ nodebb-no-console-log
+          ❰❰ Blocking ❱❱
+          Avoid leaving console.log() calls in production code. Use a logger instead.
+                                                                                     
+          244┆ console.log('Populating database with default configs, if not already set...');
+            ⋮┆----------------------------------------
+          257┆ console.log('Previous theme detected, skipping enabling default theme');
+            ⋮┆----------------------------------------
+          262┆ console.log(`Enabling default theme: ${defaultTheme}`);
+            ⋮┆----------------------------------------
+          302┆ console.log('Administrator found, skipping Admin setup');
+            ⋮┆----------------------------------------
+          394┆ console.log('Password was not provided during automated setup, generating one...');
+            ⋮┆----------------------------------------
+          477┆ console.log(`Categories OK. Found ${cids.length} categories.`);
+            ⋮┆----------------------------------------
+          481┆ console.log('No categories found, populating instance with default categories');
+            ⋮┆----------------------------------------
+          514┆ console.log('Creating welcome post!');
+            ⋮┆----------------------------------------
+          525┆ console.log('Enabling default plugins');
+            ⋮┆----------------------------------------
+          665┆ console.log('Configuration Saved OK');
+                     
+    src/meta/build.js
+    ❯❱ nodebb-no-console-log
+          ❰❰ Blocking ❱❱
+          Avoid leaving console.log() calls in production code. Use a logger instead.
+                                                                                     
+          231┆ console.log(`webpack:assetEmitted > ${webpackCfg.output.publicPath}${file}`);
+            ⋮┆----------------------------------------
+          238┆ console.log(stats.toString('minimal'));
+                        
+    src/plugins/index.js
+    ❯❱ nodebb-no-console-log
+          ❰❰ Blocking ❱❱
+          Avoid leaving console.log() calls in production code. Use a logger instead.
+                                                                                     
+          118┆ console.log('');
+            ⋮┆----------------------------------------
+          121┆ console.log(`${chalk.yellow('  * ') + Plugins.versionWarning[x]}`);
+            ⋮┆----------------------------------------
+          123┆ console.log('');
+            ⋮┆----------------------------------------
+          137┆ deprecation.affected.forEach(id => console.log(`  ${chalk.yellow('*')} ${id}`));
+            ⋮┆----------------------------------------
+          159┆ console.log(response);
+            ⋮┆----------------------------------------
+          176┆ console.log(response);
+            ⋮┆----------------------------------------
+          190┆ console.log(response);
+                  
+    src/upgrade.js
+    ❯❱ nodebb-no-console-log
+          ❰❰ Blocking ❱❱
+          Avoid leaving console.log() calls in production code. Use a logger instead.
+                                                                                     
+           94┆ console.log('\nParsing upgrade scripts... ');
+            ⋮┆----------------------------------------
+          114┆ console.log('\nParsing upgrade scripts... ');
+            ⋮┆----------------------------------------
+          122┆ console.log(`${chalk.green('OK')} | ${chalk.cyan(`${files.length} script(s)
+               found`)}${skipCount > 0 ? chalk.cyan(`, ${skipCount} skipped`) : ''}`);    
+            ⋮┆----------------------------------------
+          174┆ console.log(chalk.green('Schema update complete!\n'));
+                
+    src/utils.js
+    ❯❱ nodebb-no-console-log
+          ❰❰ Blocking ❱❱
+          Avoid leaving console.log() calls in production code. Use a logger instead.
+                                                                                     
+            8┆ console.log('%s took %d milliseconds', operation, process.elapsedTimeSince(start));
+
