@@ -30,6 +30,8 @@ export default defineConfig([
 			'test/files/',
 			'*.min.js',
 			'install/docker/',
+			'**/*_jalangi_.js',
+			'**/*_jalangi_.json',
 		],
 	},
 	// tests
