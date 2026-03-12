@@ -1,0 +1,13 @@
+Jalangi2 dynamic analysis run (npm run analysis:jalangi)
+========================================================
+
+Command:
+  cd node_modules/jalangi2 && node src/js/commands/jalangi.js --inlineIID --inlineSource --analysis src/js/sample_analyses/ChainedAnalyses.js --analysis src/js/sample_analyses/dlint/Utils.js --analysis src/js/sample_analyses/dlint/CheckNaN.js ../../tools/jalangi-target.js
+
+Output:
+--------
+n=3 s=hello world
+Observed NaN at (/workspaces/nodebb-spring-26-force-push-masters/tools/jalangi-target.js:6:10:6:15) 1 time(s).
+Observed NaN at (/workspaces/nodebb-spring-26-force-push-masters/tools/jalangi-target.js:13:16:13:33) 1 time(s).
+
+Exit code: 0
