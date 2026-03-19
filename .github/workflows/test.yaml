@@ -82,6 +82,9 @@ jobs:
       - name: Run ESLint
         run: npm run lint
 
+      - name: Run Jalangi2 dynamic analysis
+        run: npm run analysis:jalangi
+
       - name: Node tests
         run: npm test
 
