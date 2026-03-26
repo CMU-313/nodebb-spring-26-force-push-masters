@@ -3,7 +3,7 @@
 
 const translatorApi = module.exports;
 
-const TRANSLATOR_API = process.env.TRANSLATOR_API || 'http://localhost:8080';
+const TRANSLATOR_API = process.env.TRANSLATOR_API || 'http://localhost:5000';
 
 translatorApi.translate = async function (postData) {
 	try {
