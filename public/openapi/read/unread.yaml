@@ -185,6 +185,9 @@ get:
                                   type: number
                                 isEnglish:
                                   type: boolean
+                                translatedContent:
+                                  type: string
+                                  nullable: true
                             tags:
                               type: array
                               items:
