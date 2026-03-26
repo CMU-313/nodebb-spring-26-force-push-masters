@@ -9,8 +9,8 @@ translatorApi.translate = async function (postData) {
 	try {
 		const response = await fetch(`${TRANSLATOR_API}/?content=${encodeURIComponent(postData.content)}`);
 		const data = await response.json();
-		return [data.is_english, data.translated_content];
+		return [data.is_english ? 1 : 0, data.translated_content];
 	} catch (err) {
-		return [true, postData.content];
+		return [1, postData.content];
 	}
 };
